@@ -1120,7 +1120,7 @@ async function enviarMensajePedido() {
     const encontrados = resultados.filter(r => r.articulo);
 
     if (noEncontrados.length) {
-      addChatMsg(`⚠ No encontré: ${noEncontrados.map(r => `<em>${r.termino}</em>`).join(', ')}. El resto se agregó al pedido.`, 'ai');
+      addChatMsg(`⚠ No encontré en Switch: ${noEncontrados.map(r => `<em>${r.termino}</em>`).join(', ')}. Verifica que existan en tu catálogo con ese nombre.`, 'ai');
     }
 
     if (!encontrados.length) {
@@ -1156,44 +1156,78 @@ async function enviarMensajePedido() {
 }
 
 function interpretarPedidoConIA(mensaje) {
-  // Normalizar: minúsculas, limpiar espacios extra
-  const texto = mensaje.trim();
   const resultados = [];
 
-  // Separar por comas, "y", punto y coma
-  const segmentos = texto.split(/,|;| y /i).map(s => s.trim()).filter(Boolean);
+  // Separar por salto de línea primero, luego por coma/punto y coma
+  const segmentos = mensaje
+    .split(/\n|,|;/)
+    .map(s => s.trim())
+    .filter(s => s.length > 1);
+
+  // Palabras que indican descripción/calidad a ignorar para la búsqueda
+  const stopWords = /\b(no|muy|ni|fresco|grande|pequeño|maduro|golpeado|rizado|entero|limpio|nuevo|bueno|bonito|especial|selecto|extra|premium|importado|nacional|orgánico|organico|natural)\b/gi;
+
+  // Unidades de medida conocidas
+  const unidades = /\b(\d+[\.,]?\d*)\s*(unidades?|unid?|u|piezas?|pzas?|mazos?|libras?|lbs?|kilos?|kg|gramos?|g|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lt?|ml)\b/i;
+
+  // Patrón "NxN" de calibre como "3x3", "2x2" — NO es cantidad, es especificación
+  const calibre = /\b\d+x\d+\b/gi;
 
   for (const seg of segmentos) {
-    let termino = '', cantidad = 1;
+    if (!seg) continue;
 
-    // Patrones: "5 Coca Cola", "Coca Cola x5", "Coca Cola x 5", "5x Coca Cola", "Coca Cola 5 unidades"
-    const pat1 = seg.match(/^(\d+[\.,]?\d*)\s+x?\s*(.+)$/i);         // "5 producto"
-    const pat2 = seg.match(/^(.+?)\s+x\s*(\d+[\.,]?\d*)$/i);          // "producto x5"
-    const pat3 = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)\s*(u|un|uni|unid|unidades?|cajas?|paq|packs?|kg|g|lt?|ml)?$/i); // "producto 5" o "producto 5 unidades"
-    const pat4 = seg.match(/^(\d+[\.,]?\d*)\s*x\s*(.+)$/i);           // "5x producto"
+    let cantidad = 1;
+    let termino = seg;
 
-    if (pat4) {
-      cantidad = parseFloat(pat4[1].replace(',', '.'));
-      termino = pat4[2].trim();
-    } else if (pat1) {
-      cantidad = parseFloat(pat1[1].replace(',', '.'));
-      termino = pat1[2].trim();
-    } else if (pat2) {
-      termino = pat2[1].trim();
-      cantidad = parseFloat(pat2[2].replace(',', '.'));
-    } else if (pat3) {
-      termino = pat3[1].trim();
-      cantidad = parseFloat(pat3[2].replace(',', '.'));
+    // 1. Extraer cantidad con unidad explícita al final: "30 unidades", "2 libras", "2 mazos"
+    const mUnidad = seg.match(unidades);
+    if (mUnidad) {
+      cantidad = parseFloat(mUnidad[1].replace(',', '.'));
+      // Quitar la parte de cantidad+unidad del término
+      termino = seg.replace(mUnidad[0], '').trim();
     } else {
-      termino = seg.trim();
-      cantidad = 1;
+      // 2. Número suelto al final: "Blueberry 3"
+      const mFinal = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)$/);
+      if (mFinal && !calibre.test(mFinal[2])) {
+        termino = mFinal[1].trim();
+        cantidad = parseFloat(mFinal[2].replace(',', '.'));
+      }
+      // 3. Número al inicio: "30 Tomate..."
+      const mInicio = seg.match(/^(\d+[\.,]?\d*)\s+(.+)$/);
+      if (mInicio && !mUnidad) {
+        const numStr = mInicio[1];
+        const resto = mInicio[2];
+        // Solo tomar número del inicio si no parece un calibre con el siguiente token
+        if (!resto.match(/^x\d/i)) {
+          cantidad = parseFloat(numStr.replace(',', '.'));
+          termino = resto.trim();
+        }
+      }
     }
 
-    // Limpiar términos: quitar palabras como "de", "del", al inicio
-    termino = termino.replace(/^(de|del|un|una|unos|unas)\s+/i, '').trim();
+    // Limpiar el término: quitar adjetivos descriptivos para mejorar búsqueda en Switch
+    let terminoLimpio = termino
+      .replace(stopWords, '')           // quitar adjetivos
+      .replace(calibre, '')             // quitar calibres como 3x3
+      .replace(/\s{2,}/g, ' ')          // espacios dobles
+      .replace(/^(de|del|un|una|y)\s+/i, '')
+      .trim();
 
-    if (termino) {
-      resultados.push({ termino, cantidad: isNaN(cantidad) ? 1 : cantidad });
+    // Si quedó muy corto o vacío, usar el término original (primera palabra significativa)
+    if (terminoLimpio.length < 2) {
+      terminoLimpio = termino.split(/\s+/).slice(0, 2).join(' ');
+    }
+
+    // Usar solo las primeras 3 palabras del término para la búsqueda (más preciso)
+    const palabras = terminoLimpio.split(/\s+/).filter(p => p.length > 1);
+    const terminoBusqueda = palabras.slice(0, 3).join(' ');
+
+    if (terminoBusqueda) {
+      resultados.push({
+        termino: terminoBusqueda,
+        terminoOriginal: seg,
+        cantidad: isNaN(cantidad) ? 1 : cantidad
+      });
     }
   }
 
@@ -1205,19 +1239,45 @@ async function resolverArticulos(parsed) {
   for (const item of parsed) {
     try {
       let art = null;
+
+      // Intento 1: buscar con término limpio completo
       try {
         const d = await apiGet('/apiarticulos/buscar?buscar=' + encodeURIComponent(item.termino) + '&estatus=Activo');
         art = d.articulo;
       } catch(_) {}
 
+      // Intento 2: lista con filtro
       if (!art) {
-        const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(item.termino) + '&porPagina=1&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
-        art = (d.articulos||[])[0] || null;
+        try {
+          const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(item.termino) + '&porPagina=3&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
+          art = (d.articulos||[])[0] || null;
+        } catch(_) {}
       }
 
-      resultados.push({ termino: item.termino, cantidad: parseFloat(item.cantidad)||1, articulo: art });
+      // Intento 3: solo primera palabra del término
+      if (!art) {
+        const primeraPalabra = item.termino.split(' ')[0];
+        if (primeraPalabra && primeraPalabra.length > 2) {
+          try {
+            const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(primeraPalabra) + '&porPagina=3&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
+            art = (d.articulos||[])[0] || null;
+          } catch(_) {}
+        }
+      }
+
+      resultados.push({
+        termino: item.terminoOriginal || item.termino,
+        terminoBuscado: item.termino,
+        cantidad: parseFloat(item.cantidad)||1,
+        articulo: art
+      });
     } catch(e) {
-      resultados.push({ termino: item.termino, cantidad: parseFloat(item.cantidad)||1, articulo: null });
+      resultados.push({
+        termino: item.terminoOriginal || item.termino,
+        terminoBuscado: item.termino,
+        cantidad: parseFloat(item.cantidad)||1,
+        articulo: null
+      });
     }
   }
   return resultados;
