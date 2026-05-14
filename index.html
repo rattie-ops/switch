@@ -1158,75 +1158,102 @@ async function enviarMensajePedido() {
 function interpretarPedidoConIA(mensaje) {
   const resultados = [];
 
-  // Separar por salto de línea primero, luego por coma/punto y coma
-  const segmentos = mensaje
-    .split(/\n|,|;/)
-    .map(s => s.trim())
-    .filter(s => s.length > 1);
+  // Unidades de medida — usadas para dividir el texto en productos
+  const reUnidad = /\b(unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?)\b/i;
 
-  // Palabras que indican descripción/calidad a ignorar para la búsqueda
-  const stopWords = /\b(no|muy|ni|fresco|grande|pequeño|maduro|golpeado|rizado|entero|limpio|nuevo|bueno|bonito|especial|selecto|extra|premium|importado|nacional|orgánico|organico|natural)\b/gi;
+  // Palabras descriptivas/adjetivos a eliminar antes de buscar
+  const stopWords = /\b(no|muy|ni|fresco|fresca|grande|grandes|pequeño|pequeña|maduro|madura|golpeado|golpeada|rizado|rizada|entero|entera|limpio|limpia|nuevo|nueva|bueno|buena|bonito|bonita|especial|selecto|selecta|extra|premium|importado|nacional|orgánico|organico|natural)\b/gi;
 
-  // Unidades de medida conocidas
-  const unidades = /\b(\d+[\.,]?\d*)\s*(unidades?|unid?|u|piezas?|pzas?|mazos?|libras?|lbs?|kilos?|kg|gramos?|g|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lt?|ml)\b/i;
+  // Calibres tipo "3x3", "2x2"
+  const reCalib = /\b\d+x\d+\b/gi;
 
-  // Patrón "NxN" de calibre como "3x3", "2x2" — NO es cantidad, es especificación
-  const calibre = /\b\d+x\d+\b/gi;
+  // --- PASO 1: dividir el mensaje en líneas/segmentos ---
+  let segmentos = [];
 
+  // Si hay saltos de línea reales, usarlos
+  if (/\n/.test(mensaje)) {
+    segmentos = mensaje.split(/\n/).map(s => s.trim()).filter(s => s.length > 2);
+  } else {
+    // Texto corrido: dividir donde aparece "NÚMERO unidad" precedido de texto
+    // Estrategia: encontrar todos los patrones "cantidad unidad" y usarlos como separadores
+    // Ejemplo: "Tomate 3x3 ... 30 unidades  Brocoli ... 12 unidades"
+    // Dividir por: dígito(s) + espacio + unidad seguido de 2+ espacios o fin
+    const re = /(\d+[\.,]?\d*\s*(?:unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?))(?:\s{2,}|\s+(?=[A-ZÁÉÍÓÚÑ]))/gi;
+
+    let lastIndex = 0;
+    let match;
+    const text = mensaje;
+    const splits = [];
+
+    while ((match = re.exec(text)) !== null) {
+      splits.push(match.index + match[0].trimEnd().length);
+    }
+
+    if (splits.length > 0) {
+      let prev = 0;
+      for (const idx of splits) {
+        const seg = text.slice(prev, idx).trim();
+        if (seg.length > 2) segmentos.push(seg);
+        prev = idx;
+      }
+      const last = text.slice(prev).trim();
+      if (last.length > 2) segmentos.push(last);
+    }
+
+    // Si no se pudo dividir por unidades, intentar dividir por mayúscula precedida de espacios
+    if (segmentos.length <= 1) {
+      segmentos = mensaje
+        .split(/\s{2,}/)
+        .map(s => s.trim())
+        .filter(s => s.length > 2);
+    }
+
+    // Último recurso: tratar todo como un segmento
+    if (segmentos.length === 0) segmentos = [mensaje.trim()];
+  }
+
+  // --- PASO 2: parsear cada segmento ---
   for (const seg of segmentos) {
-    if (!seg) continue;
+    if (!seg || seg.length < 2) continue;
 
     let cantidad = 1;
     let termino = seg;
 
-    // 1. Extraer cantidad con unidad explícita al final: "30 unidades", "2 libras", "2 mazos"
-    const mUnidad = seg.match(unidades);
+    // Buscar "NÚMERO unidad" en cualquier posición
+    const mUnidad = seg.match(/(\d+[\.,]?\d*)\s*(unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?)/i);
     if (mUnidad) {
       cantidad = parseFloat(mUnidad[1].replace(',', '.'));
-      // Quitar la parte de cantidad+unidad del término
       termino = seg.replace(mUnidad[0], '').trim();
     } else {
-      // 2. Número suelto al final: "Blueberry 3"
-      const mFinal = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)$/);
-      if (mFinal && !calibre.test(mFinal[2])) {
-        termino = mFinal[1].trim();
-        cantidad = parseFloat(mFinal[2].replace(',', '.'));
-      }
-      // 3. Número al inicio: "30 Tomate..."
-      const mInicio = seg.match(/^(\d+[\.,]?\d*)\s+(.+)$/);
-      if (mInicio && !mUnidad) {
-        const numStr = mInicio[1];
-        const resto = mInicio[2];
-        // Solo tomar número del inicio si no parece un calibre con el siguiente token
-        if (!resto.match(/^x\d/i)) {
-          cantidad = parseFloat(numStr.replace(',', '.'));
-          termino = resto.trim();
-        }
-      }
+      // Número suelto al final: "Blueberry 3"
+      const mFin = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)$/);
+      if (mFin) { termino = mFin[1].trim(); cantidad = parseFloat(mFin[2]); }
     }
 
-    // Limpiar el término: quitar adjetivos descriptivos para mejorar búsqueda en Switch
+    // Limpiar término
     let terminoLimpio = termino
-      .replace(stopWords, '')           // quitar adjetivos
-      .replace(calibre, '')             // quitar calibres como 3x3
-      .replace(/\s{2,}/g, ' ')          // espacios dobles
+      .replace(stopWords, '')
+      .replace(reCalib, '')
+      .replace(/\s{2,}/g, ' ')
       .replace(/^(de|del|un|una|y)\s+/i, '')
       .trim();
 
-    // Si quedó muy corto o vacío, usar el término original (primera palabra significativa)
     if (terminoLimpio.length < 2) {
       terminoLimpio = termino.split(/\s+/).slice(0, 2).join(' ');
     }
 
-    // Usar solo las primeras 3 palabras del término para la búsqueda (más preciso)
-    const palabras = terminoLimpio.split(/\s+/).filter(p => p.length > 1);
-    const terminoBusqueda = palabras.slice(0, 3).join(' ');
+    // Máximo 3 palabras para la búsqueda
+    const terminoBusqueda = terminoLimpio
+      .split(/\s+/)
+      .filter(p => p.length > 1)
+      .slice(0, 3)
+      .join(' ');
 
-    if (terminoBusqueda) {
+    if (terminoBusqueda && terminoBusqueda.length > 1) {
       resultados.push({
         termino: terminoBusqueda,
         terminoOriginal: seg,
-        cantidad: isNaN(cantidad) ? 1 : cantidad
+        cantidad: isNaN(cantidad) || cantidad <= 0 ? 1 : cantidad
       });
     }
   }
