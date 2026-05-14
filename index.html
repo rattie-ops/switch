@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Switch Connect</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -20,8 +20,8 @@
     --text: #1a1a2e;
     --muted: #6b7280;
     --dim: #c0c4cc;
-    --font: 'Plus Jakarta Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
+    --font: Inter, system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", Consolas, monospace;
     --radius: 10px;
   }
 
@@ -562,12 +562,12 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo"><img src="https://switch-soft.com/wp-content/uploads/2022/11/logo_switch.svg" alt="Switch" style="height:32px;margin-bottom:4px;display:block;"> <span style="font-size:13px;font-weight:500;color:#6b7280;letter-spacing:1px;text-transform:uppercase;">Connect</span></div>
+    <div class="login-logo">Switch <span>Connect</span></div>
     <div class="login-sub">Conecta con tu instancia de Switch ERP</div>
 
     <div class="field field-url">
       <label>URL del servidor</label>
-      <input type="text" id="inp-url" placeholder="http://tuempresa.switcherp.com" />
+      <input type="text" id="inp-url" placeholder="https://agrochef.switch-soft.com" value="https://agrochef.switch-soft.com" />
     </div>
     <div class="field">
       <label>Usuario</label>
@@ -585,7 +585,7 @@
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-logo" style="display:flex;align-items:center;gap:8px;"><img src="https://switch-soft.com/wp-content/uploads/2022/11/logo_switch.svg" alt="Switch" style="height:22px;"> <span style="font-size:11px;font-weight:600;color:#E8411A;letter-spacing:1.5px;text-transform:uppercase;border-left:1px solid #e0e2e8;padding-left:8px;">Connect</span></div>
+    <div class="topbar-logo">Switch Connect</div>
     <div class="topbar-url" id="topbar-url"></div>
     <div class="topbar-spacer"></div>
     <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
