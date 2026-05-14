@@ -1123,15 +1123,24 @@ async function enviarMensajePedido() {
       return;
     }
 
-    encontrados.forEach(r => {
+    encontrados.forEach((r, i) => {
       const art = r.articulo;
-      // Normalizar campos — /buscar y /lista usan los mismos nombres pero verificamos fallbacks
-      const codigoBarraId = art.codigoBarraId || art.codigoBarraid || art.id;
-      const descripcion   = art.descripcion   || art.nombre       || art.descripcion || '—';
-      const codigo        = art.codigo        || art.codigoArticulo || '';
-      const precio        = parseFloat(art.precio) || 0;
+      console.log(`[SC] art[${i}] keys:`, Object.keys(art));
+      console.log(`[SC] art[${i}] raw:`, JSON.stringify(art));
 
-      const existe = pedidoLineas.findIndex(l => l.codigoBarraId == codigoBarraId);
+      // Normalizar campos con todos los posibles nombres que puede usar Switch
+      const codigoBarraId = art.codigoBarraId ?? art.codigoBarraid ?? art.codigobarraid ?? art.codigobarra_id ?? art.id ?? `idx_${i}`;
+      const descripcion   = art.descripcion   ?? art.nombre ?? art.Descripcion ?? '—';
+      const codigo        = art.codigo        ?? art.codigoArticulo ?? art.Codigo ?? '';
+      const precio        = parseFloat(art.precio ?? art.Precio ?? 0) || 0;
+
+      console.log(`[SC] art[${i}] → codigoBarraId=${codigoBarraId} desc=${descripcion} precio=${precio}`);
+
+      // Solo acumular si el mismo codigoBarraId ya existe Y es un valor real (no idx_)
+      const existe = String(codigoBarraId).startsWith('idx_')
+        ? -1
+        : pedidoLineas.findIndex(l => l.codigoBarraId == codigoBarraId);
+
       if (existe >= 0) {
         pedidoLineas[existe].cantidad += r.cantidad;
       } else {
