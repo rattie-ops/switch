@@ -1124,23 +1124,31 @@ async function enviarMensajePedido() {
     }
 
     encontrados.forEach(r => {
-      const existe = pedidoLineas.findIndex(l => l.codigoBarraId == r.articulo.codigoBarraId);
+      const art = r.articulo;
+      // Normalizar campos — /buscar y /lista usan los mismos nombres pero verificamos fallbacks
+      const codigoBarraId = art.codigoBarraId || art.codigoBarraid || art.id;
+      const descripcion   = art.descripcion   || art.nombre       || art.descripcion || '—';
+      const codigo        = art.codigo        || art.codigoArticulo || '';
+      const precio        = parseFloat(art.precio) || 0;
+
+      const existe = pedidoLineas.findIndex(l => l.codigoBarraId == codigoBarraId);
       if (existe >= 0) {
         pedidoLineas[existe].cantidad += r.cantidad;
       } else {
         pedidoLineas.push({
-          codigoBarraId: r.articulo.codigoBarraId,
-          descripcion: r.articulo.descripcion,
-          codigo: r.articulo.codigo,
-          precio: parseFloat(r.articulo.precio) || 0,
+          codigoBarraId,
+          descripcion,
+          codigo,
+          precio,
           cantidad: r.cantidad,
           descuento: 0
         });
       }
     });
 
-    addChatMsg(`✓ Agregados ${encontrados.length} producto(s) al pedido. Puedes seguir agregando o revisar el pedido.`, 'ai');
+    addChatMsg(`✓ Agregados ${encontrados.length} producto(s) al pedido.`, 'ai');
     mostrarBotonRevisar();
+    mostrarRevision();
 
   } catch(e) {
     thinking.remove();
@@ -1293,6 +1301,7 @@ async function resolverArticulos(parsed) {
         cantidad: parseFloat(item.cantidad)||1,
         articulo: art
       });
+      if (art) console.log('[Switch Connect] Artículo encontrado:', JSON.stringify(art));
     } catch(e) {
       resultados.push({
         termino: item.terminoOriginal || item.termino,
