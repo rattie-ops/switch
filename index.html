@@ -539,6 +539,44 @@
   }
   .linea-del:hover { color: #c0392b; }
 
+  /* SUGGESTION PICKER */
+  .sug-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+    background: var(--surface);
+  }
+
+  .sugerencia-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    gap: 12px;
+  }
+
+  .sugerencia-item:last-child { border-bottom: none; }
+  .sugerencia-item:hover { background: var(--surface2); }
+
+  .sug-desc {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .sug-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+
   /* TOAST */
   #toast {
     position: fixed;
@@ -1114,22 +1152,12 @@ async function enviarMensajePedido() {
     const noEncontrados = resultados.filter(r => !r.articulo);
     const encontrados = resultados.filter(r => r.articulo);
 
-    if (noEncontrados.length) {
-      addChatMsg(`⚠ No encontré en Switch: ${noEncontrados.map(r => `<em>${r.termino}</em>`).join(', ')}. Verifica que existan en tu catálogo con ese nombre.`, 'ai');
-    }
-
-    if (!encontrados.length) {
-      addChatMsg('No encontré ningún producto en Switch. Verifica los nombres o códigos.', 'ai');
-      return;
-    }
-
     encontrados.forEach((r, i) => {
       const art = r.articulo;
       const codigoBarraId = art.codigoBarraId ?? art.codigoBarraid ?? art.codigoBarra_id ?? art.id;
       const descripcion   = art.descripcion   ?? art.Descripcion  ?? '—';
       const codigo        = art.codigo        ?? art.Codigo       ?? '';
       const precio        = parseFloat(art.precio ?? art.Precio   ?? 0) || 0;
-
       const existe = pedidoLineas.findIndex(l => l.codigoBarraId != null && l.codigoBarraId == codigoBarraId);
       if (existe >= 0) {
         pedidoLineas[existe].cantidad += r.cantidad;
@@ -1138,9 +1166,18 @@ async function enviarMensajePedido() {
       }
     });
 
-    addChatMsg(`✓ Agregados ${encontrados.length} producto(s) al pedido.`, 'ai');
-    mostrarBotonRevisar();
-    mostrarRevision();
+    if (encontrados.length) {
+      addChatMsg(`✓ Agregados ${encontrados.length} producto(s) al pedido.`, 'ai');
+      mostrarBotonRevisar();
+      mostrarRevision();
+    }
+
+    // Para los no encontrados, buscar sugerencias y mostrar picker
+    if (noEncontrados.length) {
+      for (const item of noEncontrados) {
+        await mostrarSugerencias(item);
+      }
+    }
 
   } catch(e) {
     thinking.remove();
@@ -1148,6 +1185,74 @@ async function enviarMensajePedido() {
   } finally {
     document.getElementById('btn-send-msg').disabled = false;
   }
+}
+
+async function mostrarSugerencias(item) {
+  const box = document.getElementById('chat-messages');
+  const termino = item.terminoBuscado || item.termino;
+  const cantidad = item.cantidad;
+
+  // Buscar sugerencias usando el término original y la primera palabra
+  let sugerencias = [];
+  try {
+    const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(termino) + '&porPagina=6&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
+    sugerencias = d.articulos || [];
+  } catch(_) {}
+
+  if (!sugerencias.length) {
+    // Intenta con primera palabra
+    try {
+      const primera = termino.split(' ')[0];
+      const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(primera) + '&porPagina=6&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
+      sugerencias = d.articulos || [];
+    } catch(_) {}
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'align-self:flex-start; width:100%; max-width:480px;';
+
+  if (!sugerencias.length) {
+    wrapper.innerHTML = `
+      <div class="chat-bubble chat-ai">
+        ⚠ No encontré "<strong>${item.termino}</strong>" ni sugerencias similares en Switch.
+      </div>`;
+    box.appendChild(wrapper);
+    wrapper.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    return;
+  }
+
+  const opciones = sugerencias.map((a, i) => {
+    const cbId  = a.codigoBarraId ?? a.id;
+    const desc  = a.descripcion ?? '—';
+    const cod   = a.codigo ?? '';
+    const precio = parseFloat(a.precio ?? 0).toFixed(2);
+    return `<div class="sugerencia-item" onclick="agregarDesdeSugerencia('${cbId}','${desc.replace(/'/g,"\\'")}','${cod}',${precio},${cantidad},this.closest('.sugerencia-wrap'))">
+      <span class="sug-desc">${desc}</span>
+      <span class="sug-meta">${cod} · $${precio}</span>
+    </div>`;
+  }).join('');
+
+  wrapper.className = 'sugerencia-wrap';
+  wrapper.innerHTML = `
+    <div class="chat-bubble chat-ai" style="width:100%;max-width:100%;border-radius:10px 10px 3px 10px;">
+      ¿Cuál es "<strong>${item.termino}</strong>" (${cantidad} uds)? Elige una opción:
+    </div>
+    <div class="sug-list">${opciones}</div>
+    <button class="btn" style="margin-top:6px;font-size:11px;" onclick="this.closest('.sugerencia-wrap').remove()">Omitir</button>`;
+  box.appendChild(wrapper);
+  wrapper.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function agregarDesdeSugerencia(codigoBarraId, descripcion, codigo, precio, cantidad, wrap) {
+  const existe = pedidoLineas.findIndex(l => l.codigoBarraId == codigoBarraId);
+  if (existe >= 0) {
+    pedidoLineas[existe].cantidad += cantidad;
+  } else {
+    pedidoLineas.push({ codigoBarraId, descripcion, codigo, precio: parseFloat(precio), cantidad, descuento: 0 });
+  }
+  wrap.innerHTML = `<div class="chat-bubble chat-ai">✓ Agregado: <strong>${descripcion}</strong> × ${cantidad}</div>`;
+  mostrarBotonRevisar();
+  mostrarRevision();
 }
 
 function interpretarPedidoConIA(mensaje) {
