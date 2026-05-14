@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Switch Connect</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -701,18 +701,13 @@
         </div>
 
         <div class="pedido-step" id="step-chat">
-          <div class="step-label">Paso 2 — Describe los productos del pedido</div>
-          <div style="margin-top:0.75rem; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; font-size:12px; color:var(--muted); line-height:1.8;">
-            Escribe en lenguaje natural, por ejemplo:<br>
-            <span style="color:var(--accent4);">"2 unidades de agua purificada y 5 cajas de leche deslactosada"</span><br>
-            <span style="color:var(--accent4);">"Coca Cola 350ml x10, Pepsi x6, agua x24"</span><br>
-            También puedes usar códigos directamente: <span style="color:var(--accent4);">"ART-001 x3, ART-002 x10"</span>
-          </div>
+          <div class="step-label">Paso 2 — Pega o escribe los productos del pedido</div>
           <div id="chat-messages" style="margin-top:1rem; display:flex; flex-direction:column; gap:0.75rem; min-height:60px;"></div>
-          <div style="display:flex; gap:0.5rem; margin-top:1rem;">
-            <input type="text" class="ctrl-input" id="ped-msg" placeholder="Escribe los productos y cantidades..." style="flex:1" onkeydown="if(event.key==='Enter')enviarMensajePedido()" />
-            <button class="btn primary" id="btn-send-msg" onclick="enviarMensajePedido()">Enviar ↗</button>
+          <div style="display:flex; gap:0.5rem; margin-top:1rem; align-items:flex-end;">
+            <textarea id="ped-msg" class="ctrl-input" placeholder="Pega aquí tu lista de productos con cantidades..." style="flex:1; min-height:140px; resize:vertical; line-height:1.6; padding:10px 14px;" onkeydown="if(event.key==='Enter'&&event.ctrlKey)enviarMensajePedido()"></textarea>
+            <button class="btn primary" id="btn-send-msg" onclick="enviarMensajePedido()" style="align-self:flex-end; padding:10px 18px;">Enviar ↗</button>
           </div>
+          <div style="font-size:11px; color:var(--muted); margin-top:6px;">Ctrl + Enter para enviar</div>
         </div>
 
         <div class="pedido-step" id="step-review" style="display:none;">
