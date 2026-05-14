@@ -1155,28 +1155,49 @@ async function enviarMensajePedido() {
   }
 }
 
-async function interpretarPedidoConIA(mensaje) {
-  const prompt = `Eres un asistente que extrae productos y cantidades de mensajes de ventas en español.
-Dado este mensaje del usuario, devuelve SOLO un JSON array con objetos {termino, cantidad}.
-"termino" es el nombre o código del producto tal como lo escribió el usuario.
-"cantidad" es un número (por defecto 1 si no se especifica).
-No incluyas explicación ni markdown, solo el JSON puro.
+function interpretarPedidoConIA(mensaje) {
+  // Normalizar: minúsculas, limpiar espacios extra
+  const texto = mensaje.trim();
+  const resultados = [];
 
-Mensaje: "${mensaje}"`;
+  // Separar por comas, "y", punto y coma
+  const segmentos = texto.split(/,|;| y /i).map(s => s.trim()).filter(Boolean);
 
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  const data = await resp.json();
-  const text = (data.content||[]).map(b => b.text||'').join('');
-  const clean = text.replace(/```json|```/g,'').trim();
-  return JSON.parse(clean);
+  for (const seg of segmentos) {
+    let termino = '', cantidad = 1;
+
+    // Patrones: "5 Coca Cola", "Coca Cola x5", "Coca Cola x 5", "5x Coca Cola", "Coca Cola 5 unidades"
+    const pat1 = seg.match(/^(\d+[\.,]?\d*)\s+x?\s*(.+)$/i);         // "5 producto"
+    const pat2 = seg.match(/^(.+?)\s+x\s*(\d+[\.,]?\d*)$/i);          // "producto x5"
+    const pat3 = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)\s*(u|un|uni|unid|unidades?|cajas?|paq|packs?|kg|g|lt?|ml)?$/i); // "producto 5" o "producto 5 unidades"
+    const pat4 = seg.match(/^(\d+[\.,]?\d*)\s*x\s*(.+)$/i);           // "5x producto"
+
+    if (pat4) {
+      cantidad = parseFloat(pat4[1].replace(',', '.'));
+      termino = pat4[2].trim();
+    } else if (pat1) {
+      cantidad = parseFloat(pat1[1].replace(',', '.'));
+      termino = pat1[2].trim();
+    } else if (pat2) {
+      termino = pat2[1].trim();
+      cantidad = parseFloat(pat2[2].replace(',', '.'));
+    } else if (pat3) {
+      termino = pat3[1].trim();
+      cantidad = parseFloat(pat3[2].replace(',', '.'));
+    } else {
+      termino = seg.trim();
+      cantidad = 1;
+    }
+
+    // Limpiar términos: quitar palabras como "de", "del", al inicio
+    termino = termino.replace(/^(de|del|un|una|unos|unas)\s+/i, '').trim();
+
+    if (termino) {
+      resultados.push({ termino, cantidad: isNaN(cantidad) ? 1 : cantidad });
+    }
+  }
+
+  return Promise.resolve(resultados);
 }
 
 async function resolverArticulos(parsed) {
