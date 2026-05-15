@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Mesas — Switch Connect</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f4f5f7; --surface: #fff; --border: #e0e2e8;
+    --accent: #E8411A; --text: #1a1a2e; --muted: #6b7280;
+    --font: Inter, system-ui, sans-serif;
+  }
+  body { background: var(--bg); font-family: var(--font); color: var(--text); padding: 2rem; }
+
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 0.25rem; }
+.sub { color: var(–muted); font-size: 13px; margin-bottom: 2rem; }
+
+.config {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 1.25rem;
+margin-bottom: 2rem;
+display: flex;
+gap: 1rem;
+align-items: flex-end;
+flex-wrap: wrap;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 11px; font-weight: 600; color: var(–muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.field input {
+background: var(–bg); border: 1px solid var(–border); border-radius: 8px;
+padding: 8px 12px; font-family: var(–font); font-size: 13px; color: var(–text);
+outline: none; width: 200px;
+}
+.field input:focus { border-color: var(–accent); }
+
+.btn {
+background: var(–accent); border: none; border-radius: 8px;
+padding: 9px 18px; color: #fff; font-family: var(–font);
+font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.btn-outline {
+background: var(–surface); border: 1.5px solid var(–border); border-radius: 8px;
+padding: 9px 18px; color: var(–text); font-family: var(–font);
+font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.btn-outline:hover { border-color: var(–accent); }
+
+/* QR GRID */
+.qr-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+gap: 1.5rem;
+}
+
+/* QR CARD — this is what gets printed */
+.qr-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 1.5rem;
+text-align: center;
+break-inside: avoid;
+}
+
+.qr-brand { font-size: 10px; font-weight: 600; color: var(–accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.qr-mesa { font-size: 22px; font-weight: 700; color: var(–text); margin-bottom: 1rem; }
+.qr-code { display: flex; justify-content: center; margin-bottom: 1rem; }
+.qr-url { font-size: 10px; color: var(–muted); word-break: break-all; }
+.qr-hint { font-size: 11px; color: var(–muted); margin-top: 8px; }
+
+@media print {
+body { background: white; padding: 0.5rem; }
+.config, .print-btn-row, h1, .sub { display: none !important; }
+.qr-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.qr-card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
+}
+</style>
+
+</head>
+<body>
+
+<h1>🖨️ Generador de QR por Mesa</h1>
+<div class="sub">Genera e imprime los códigos QR para pegar en cada mesa.</div>
+
+<div class="config">
+  <div class="field">
+    <label>URL base de la app</label>
+    <input type="text" id="inp-base" value="https://rattie-ops.github.io/switch/mesa.html" />
+  </div>
+  <div class="field">
+    <label>Cantidad de mesas</label>
+    <input type="number" id="inp-mesas" value="7" min="1" max="50" style="width:100px" />
+  </div>
+  <button class="btn" onclick="generarQRs()">Generar QR</button>
+</div>
+
+<div class="print-btn-row" style="margin-bottom:1.5rem; display:flex; gap:0.75rem;">
+  <button class="btn-outline" onclick="window.print()">🖨️ Imprimir todos</button>
+</div>
+
+<div class="qr-grid" id="qr-grid"></div>
+
+<script>
+function generarQRs() {
+  const base   = document.getElementById('inp-base').value.trim().replace(/\/$/, '');
+  const mesas  = parseInt(document.getElementById('inp-mesas').value) || 6;
+  const grid   = document.getElementById('qr-grid');
+  grid.innerHTML = '';
+
+  for (let i = 1; i <= mesas; i++) {
+    const url = `${base}?mesa=${i}`;
+
+    const card = document.createElement('div');
+    card.className = 'qr-card';
+    card.innerHTML = `
+      <div class="qr-brand">Switch Connect</div>
+      <div class="qr-mesa">Mesa ${i}</div>
+      <div class="qr-code" id="qr-${i}"></div>
+      <div class="qr-url">${url}</div>
+      <div class="qr-hint">Escanea para ver tu pedido</div>
+    `;
+    grid.appendChild(card);
+
+    new QRCode(document.getElementById(`qr-${i}`), {
+      text: url,
+      width: 160,
+      height: 160,
+      colorDark: '#1a1a2e',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+}
+
+// Auto-generate on load
+generarQRs();
+</script>
+
+</body>
+</html>
