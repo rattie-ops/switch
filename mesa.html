@@ -356,7 +356,7 @@ async function init() {
 
 async function apiGet(path) {
   const r = await fetch(API_URL + path, {
-    headers: { 'Authorization': TOKEN }
+    headers: { 'Authorization': 'Bearer ' + TOKEN }
   });
   const data = await r.json();
   if (data.error) {
