@@ -332,7 +332,7 @@
 
 <script>
 const API_URL = 'https://agrochef.switch-soft.com';
-const TOKEN_FIJO = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibGljZW5jaWEiOiIxNjIxOTc3Mzk1NjBBRDY5MzM0QTE1RSIsInRva2Vua2V5IjoyMjUyMzY5ODM4LCJrZXkiOiJWZ2VaWUk1N3VLUnBoOFUifQ.D3gBRvU9b_WfaKbIASwan5JOatGtNjAZUEIaACQxq0s';
+const TOKEN_FIJO = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibGljZW5jaWEiOiIxNjIxOTc3Mzk1NjBBRDY5MzM0QTE1RSIsInRva2Vua2V5IjoyMjUyNDU3MDExLCJrZXkiOiJTWDBKUHpBbEJrNjNleTIifQ.BZwS47qf8QAE4yff5BMd21WFEvWvMndwiAQ3FeAnLFg';
 
 // Leer número de mesa desde ?mesa=1
 const params  = new URLSearchParams(location.search);
@@ -356,7 +356,7 @@ async function init() {
 
 async function apiGet(path) {
   const r = await fetch(API_URL + path, {
-    headers: { 'Authorization': 'Bearer ' + TOKEN }
+    headers: { 'Authorization': TOKEN }
   });
   const data = await r.json();
   if (data.error) {
