@@ -305,7 +305,6 @@
     text-decoration: underline;
   }
 
-  /* QR PRINT SECTION (hidden on screen, shown when printing) */
   @media print {
     body * { visibility: hidden; }
     #qr-section, #qr-section * { visibility: visible; }
@@ -331,37 +330,68 @@
 </div>
 
 <script>
-const API_URL = 'https://mambabydiana.switch-soft.com';
-const TOKEN_FIJO = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibGljZW5jaWEiOiIxNjIxOTc3Mzk1NjBBRDY5MzM0QTE1RSIsInRva2Vua2V5IjoyMjUyNDU3MDExLCJrZXkiOiJTWDBKUHpBbEJrNjNleTIifQ.BZwS47qf8QAE4yff5BMd21WFEvWvMndwiAQ3FeAnLFg';
+const API_URL  = 'https://mambabydiana.switch-soft.com';
+const API_USER = 'admin';
+const API_PASS = 'Mamba2020';
 
 // Leer número de mesa desde ?mesa=1
-const params  = new URLSearchParams(location.search);
+const params     = new URLSearchParams(location.search);
 const mesaNum    = params.get('mesa') || '1';
-const mesaCodigo = mesaNum.padStart(3, '0');  // "1" → "001", "7" → "007"
+const mesaCodigo = mesaNum.padStart(3, '0');  // "1" → "001"
 
-let TOKEN = TOKEN_FIJO;
+let TOKEN        = null;
+let pedidoActual = null;
 
-// ── INIT ──────────────────────────────────────────────────────
 document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
 document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
-init();
 
+// ── AUTENTICACIÓN ─────────────────────────────────────────────
+async function obtenerToken() {
+  const fd = new FormData();
+  fd.append('usuario', API_USER);
+  fd.append('password', API_PASS);
+
+  const r = await fetch(API_URL + '/autenticacion', {
+    method: 'POST',
+    body: fd
+  });
+  const data = await r.json();
+  if (data.error) throw new Error('Auth: ' + data.error.message);
+  TOKEN = data.data.token;
+}
+
+// ── INIT ──────────────────────────────────────────────────────
 async function init() {
   try {
+    await obtenerToken();
     await cargarPedido();
   } catch(e) {
     mostrarError(e.message);
   }
 }
 
+init();
+
+// ── API GET ───────────────────────────────────────────────────
 async function apiGet(path) {
   const r = await fetch(API_URL + path, {
     headers: { 'Authorization': TOKEN }
   });
   const data = await r.json();
+
   if (data.error) {
-    if (data.error.code == '0005' && data.new_token) TOKEN = data.new_token;
-    else throw new Error(data.error.message);
+    // Token expirado con menos de 15 min → la API devuelve new_token
+    if (data.error.code == '0005' && data.new_token) {
+      TOKEN = data.new_token;
+      // Reintentar la misma llamada con el nuevo token
+      return apiGet(path);
+    }
+    // Token inválido → re-autenticar y reintentar una vez
+    if (data.error.code == '0006') {
+      await obtenerToken();
+      return apiGet(path);
+    }
+    throw new Error(data.error.message);
   }
   return data.data;
 }
@@ -374,10 +404,10 @@ function fmtMoney(v) {
 
 // ── BUSCAR PEDIDO ─────────────────────────────────────────────
 async function cargarPedido() {
-  // Buscar cliente por código "001", "002", etc.
+  // 1. Buscar cliente por código de mesa ("001", "002", etc.)
   const dc = await apiGet('/apicliente/lista?filtro=' + encodeURIComponent(mesaCodigo) + '&porPagina=10&paginaActual=1');
   const clientes = dc.clientes || [];
-  const cliente = clientes.find(c => (c.codigo || '').trim() === mesaCodigo);
+  const cliente  = clientes.find(c => (c.codigo || '').trim() === mesaCodigo);
 
   if (!cliente) {
     mostrarVacio('Mesa no configurada', 'No encontramos el cliente con código "' + mesaCodigo + '" en el sistema.');
@@ -386,7 +416,7 @@ async function cargarPedido() {
 
   // 2. Buscar pedidos activos para ese cliente (hoy)
   const hoy = new Date().toISOString().slice(0, 10);
-  const dp = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
+  const dp  = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
   const pedidos = dp.pedidos || [];
 
   if (!pedidos.length) {
@@ -395,11 +425,10 @@ async function cargarPedido() {
     return;
   }
 
-  // Tomar el pedido más reciente
+  // 3. Tomar el más reciente y cargar detalle
   const pedido = pedidos[0];
   pedidoActual = pedido;
 
-  // 3. Cargar detalle
   const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
   renderPedido(pedido, dd);
 }
@@ -408,16 +437,16 @@ async function cargarPedido() {
 function renderPedido(pedido, detalle) {
   setStatus('Pedido activo', 'status-activo');
 
-  const lineas = detalle.detalle || [];
-  const subtotal  = parseFloat(pedido.subTotal || 0);
+  const lineas    = detalle.detalle || [];
+  const subtotal  = parseFloat(pedido.subTotal  || 0);
   const descuento = parseFloat(pedido.descuento || 0);
-  const impuesto  = parseFloat(pedido.impuesto || 0);
-  const total     = parseFloat(pedido.total || 0);
+  const impuesto  = parseFloat(pedido.impuesto  || 0);
+  const total     = parseFloat(pedido.total     || 0);
 
   const itemsHtml = lineas.map(l => {
-    const cant  = parseFloat(l.cantidad || 0);
-    const precio = parseFloat(l.precio || 0);
-    const sub   = cant * precio * (1 - parseFloat(l.descuento || 0) / 100);
+    const cant   = parseFloat(l.cantidad || 0);
+    const precio = parseFloat(l.precio   || 0);
+    const sub    = cant * precio * (1 - parseFloat(l.descuento || 0) / 100);
     return `<div class="line-item">
       <div class="line-qty">${cant % 1 === 0 ? cant : cant.toFixed(2)}</div>
       <div class="line-desc">
@@ -442,7 +471,7 @@ function renderPedido(pedido, detalle) {
 
     <div class="totals">
       ${descuento > 0 ? `<div class="total-row"><span>Descuento</span><span>-${fmtMoney(descuento)}</span></div>` : ''}
-      ${impuesto  > 0 ? `<div class="total-row"><span>Impuesto</span><span>${fmtMoney(impuesto)}</span></div>` : ''}
+      ${impuesto  > 0 ? `<div class="total-row"><span>Impuesto</span><span>${fmtMoney(impuesto)}</span></div>`  : ''}
       <div class="total-row grand"><span>Total</span><span>${fmtMoney(total)}</span></div>
     </div>
 
@@ -508,7 +537,6 @@ async function enviarSwitchPay() {
   btn.disabled = true;
   btn.textContent = 'Enviando link...';
   try {
-    // Enviar link de pago por correo al cliente
     const fd = new FormData();
     fd.append('id', pedidoActual.id);
     fd.append('email', pedidoActual.clienteEmail || '');
@@ -520,7 +548,6 @@ async function enviarSwitchPay() {
     const data = await r.json();
     if (data.error) throw new Error(data.error.message);
 
-    // Si tenemos URL directa, abrirla
     if (pedidoActual.urlswitchpay) {
       window.open(pedidoActual.urlswitchpay, '_blank');
     } else {
@@ -538,20 +565,17 @@ function llamarMesero() {
   showModal(
     '🙋 Llamando al mesero',
     'El mesero se acercará en un momento para procesar tu pago en efectivo o tarjeta.',
-    [
-      { label: 'Entendido', cls: 'btn-switchpay', action: closeModal }
-    ]
+    [{ label: 'Entendido', cls: 'btn-switchpay', action: closeModal }]
   );
 }
 
 function mostrarExito(titulo, sub) {
-  const main = document.getElementById('main');
   const banner = `<div class="success-banner">
     <div class="success-icon">✅</div>
     <div class="success-title">${titulo}</div>
     <div class="success-sub">${sub}</div>
   </div>`;
-  main.insertAdjacentHTML('afterbegin', banner);
+  document.getElementById('main').insertAdjacentHTML('afterbegin', banner);
 }
 
 // ── MODAL ─────────────────────────────────────────────────────
@@ -580,7 +604,7 @@ async function recargar() {
   document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
   setStatus('•••', 'status-loading');
   try {
-    if (!TOKEN) TOKEN = TOKEN_FIJO;
+    if (!TOKEN) await obtenerToken();
     await cargarPedido();
   } catch(e) {
     mostrarError(e.message);
