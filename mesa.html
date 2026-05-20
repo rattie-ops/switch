@@ -429,7 +429,7 @@ async function cargarPedido() {
 
   if (!pedidos.length) {
     setStatus('Sin pedido', 'status-vacio');
-    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa.\nLlama al mesero para que tome tu orden.');
+    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa.\nAcércate a la caja para realizar tu orden.');
     return;
   }
 
@@ -492,8 +492,8 @@ function renderPedido(pedido, detalle) {
             <span>💳</span> Pagar con Switch Pay
            </button>`
       }
-      <button class="btn-pay btn-mesero" onclick="llamarMesero()">
-        <span>🙋</span> Pagar con el mesero
+      <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
+        <span>🏪</span> Pagar en caja
       </button>
     </div>
 
@@ -569,10 +569,10 @@ async function enviarSwitchPay() {
   }
 }
 
-function llamarMesero() {
+function pagarEnCaja() {
   showModal(
-    '🙋 Llamando al mesero',
-    'El mesero se acercará en un momento para procesar tu pago en efectivo o tarjeta.',
+    '🏪 Pagar en caja',
+    'Dirígete a la caja para realizar tu pago en efectivo o tarjeta.',
     [{ label: 'Entendido', cls: 'btn-switchpay', action: closeModal }]
   );
 }
@@ -619,10 +619,7 @@ async function recargar() {
   }
 }
 
-// Auto-refresh cada 30 segundos
-setInterval(() => {
-  if (document.visibilityState === 'visible') recargar();
-}, 30000);
+
 </script>
 
 </body>
