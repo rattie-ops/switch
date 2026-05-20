@@ -402,38 +402,34 @@ function fmtMoney(v) {
   return '$' + n.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// ── MAPA DE MESAS → clienteId ─────────────────────────────────
+const MESA_IDS = {
+  '1': 105,
+  '2': 2062,
+  '3': 2063,
+  '4': 2079,
+  '5': 2080,
+  '6': 2081,
+  '7': 2082
+};
+
 // ── BUSCAR PEDIDO ─────────────────────────────────────────────
 async function cargarPedido() {
-  // 1. Buscar cliente por código de mesa ("001", "002", etc.)
-  const dc = await apiGet('/apicliente/lista?filtro=' + encodeURIComponent(mesaCodigo) + '&porPagina=10&paginaActual=1');
-  const clientes = dc.clientes || [];
+  // 1. Obtener clienteId directamente del mapa
+  const clienteId = MESA_IDS[mesaNum];
 
-  // DIAGNÓSTICO 1
-  alert('CLIENTES encontrados: ' + clientes.length + '\n' +
-    clientes.map(c => 'id=' + c.id + ' codigo=[' + c.codigo + '] nombre=' + c.nombre).join('\n') +
-    '\n\nBuscando código: [' + mesaCodigo + ']');
-
-  const cliente  = clientes.find(c => (c.codigo || '').trim() === mesaCodigo);
-
-  if (!cliente) {
-    mostrarVacio('Mesa no configurada', 'No encontramos el cliente con código "' + mesaCodigo + '" en el sistema.');
+  if (!clienteId) {
+    mostrarVacio('Mesa no configurada', 'La mesa ' + mesaNum + ' no está configurada en el sistema.');
     return;
   }
 
-  // DIAGNÓSTICO 2
-  alert('CLIENTE encontrado:\nid=' + cliente.id + '\ncodigo=[' + cliente.codigo + ']\nnombre=' + cliente.nombre);
-
   // 2. Buscar pedidos para ese cliente
-  const dp  = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&porPagina=5&paginaActual=1');
+  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&porPagina=5&paginaActual=1');
   const pedidos = dp.pedidos || [];
-
-  // DIAGNÓSTICO 3
-  alert('PEDIDOS encontrados: ' + pedidos.length + '\n' +
-    pedidos.map(p => 'id=' + p.id + ' sec=' + p.secuencial + ' estatus=' + p.estatus + ' fecha=' + p.fecha).join('\n'));
 
   if (!pedidos.length) {
     setStatus('Sin pedido', 'status-vacio');
-    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa hoy.\nLlama al mesero para que tome tu orden.');
+    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa.\nLlama al mesero para que tome tu orden.');
     return;
   }
 
