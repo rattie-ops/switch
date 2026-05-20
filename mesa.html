@@ -9,17 +9,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f4f5f7;
+    --bg: #f7f5f2;
     --surface: #ffffff;
-    --surface2: #f0f1f3;
-    --border: #e0e2e8;
-    --accent: #E8411A;
-    --green: #1DA760;
-    --yellow: #F5A623;
-    --red: #E8411A;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --dim: #c0c4cc;
+    --surface2: #f0ede8;
+    --border: #e2ddd6;
+    --accent: #2d5a27;
+    --green: #2d5a27;
+    --yellow: #c8973a;
+    --red: #b94040;
+    --text: #1c1c1c;
+    --muted: #6b6560;
+    --dim: #c0b9b0;
     --font: Inter, system-ui, -apple-system, sans-serif;
     --mono: ui-monospace, "SF Mono", Consolas, monospace;
     --radius: 12px;
@@ -46,7 +46,7 @@
     z-index: 10;
   }
 
-  .header-left { display: flex; flex-direction: column; gap: 2px; }
+  .header-left { display: flex; flex-direction: row; align-items: center; gap: 10px; }
 
   .header-brand {
     font-size: 11px;
@@ -209,6 +209,7 @@
   .btn-switchpay {
     background: var(--accent);
     color: #fff;
+    letter-spacing: 0.3px;
   }
 
   .btn-mesero {
@@ -316,7 +317,7 @@
 
 <div class="header">
   <div class="header-left">
-    <div class="header-brand">Switch Connect</div>
+    <img src="https://d2j6dbq0eux0bg.cloudfront.net/images/39799274/1841556878.jpg" alt="Mamba by Diana" style="height:38px; width:auto; border-radius:6px; object-fit:cover;" />
     <div class="header-mesa" id="header-mesa">Cargando...</div>
   </div>
   <div class="header-status status-loading" id="header-status">•••</div>
