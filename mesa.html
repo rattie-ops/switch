@@ -414,9 +414,8 @@ async function cargarPedido() {
     return;
   }
 
-  // 2. Buscar pedidos activos para ese cliente (hoy)
-  const hoy = new Date().toISOString().slice(0, 10);
-  const dp  = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
+  // 2. Buscar pedidos para ese cliente
+  const dp  = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&porPagina=5&paginaActual=1');
   const pedidos = dp.pedidos || [];
 
   if (!pedidos.length) {
