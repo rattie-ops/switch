@@ -639,11 +639,18 @@ async function procesarPagoYappy() {
       body: JSON.stringify({ merchantId: d.merchantId, urlDomain: d.urlDomain })
     });
     const authData = await authResp.json();
-    console.log('Yappy auth response:', JSON.stringify(authData));
     if (!authResp.ok || authData.status?.code !== '0000') throw new Error('Auth: ' + JSON.stringify(authData));
     const token = authData.body.token;
 
     // Paso 2: Crear orden
+      merchantId:  d.merchantId,
+      orderId:     d.orderId.substring(0, 15),
+      domain:      d.urlDomain,
+      paymentDate: Date.now(),
+      aliasYappy:  tel,
+      total:       d.total
+    }));
+
     const orderResp = await fetch('https://apipagosbg.bgeneral.cloud/payments/payment-wc', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': token },
@@ -661,7 +668,6 @@ async function procesarPagoYappy() {
       })
     });
     const orderData = await orderResp.json();
-    console.log('Yappy order response:', JSON.stringify(orderData));
     if (!orderResp.ok || orderData.status?.code !== '0000') throw new Error('Orden: ' + JSON.stringify(orderData));
 
     closeModal();
