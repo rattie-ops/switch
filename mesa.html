@@ -515,6 +515,9 @@ function renderPedido(pedido, detalle) {
   const yappyWrap = document.getElementById('yappy-btn-wrap');
   if (yappyWrap) {
     const btnYappy = document.createElement('btn-yappy');
+    btnYappy.setAttribute('merchant-id',      '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
+    btnYappy.setAttribute('payment-date',     String(Date.now()));
+    btnYappy.setAttribute('url-domain',       'https://mesas.mambabydiana.com');
     btnYappy.setAttribute('total',            total.toFixed(2));
     btnYappy.setAttribute('subtotal',         (total - impuesto).toFixed(2));
     btnYappy.setAttribute('taxes',            impuesto.toFixed(2));
