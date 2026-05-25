@@ -643,14 +643,6 @@ async function procesarPagoYappy() {
     const token = authData.body.token;
 
     // Paso 2: Crear orden
-      merchantId:  d.merchantId,
-      orderId:     d.orderId.substring(0, 15),
-      domain:      d.urlDomain,
-      paymentDate: Date.now(),
-      aliasYappy:  tel,
-      total:       d.total
-    }));
-
     const orderResp = await fetch('https://apipagosbg.bgeneral.cloud/payments/payment-wc', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': token },
