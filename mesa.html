@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mi pedido</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://bt-cdn.yappycloud.com/v1/cdn/web-component-btn-yappy.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -500,17 +501,23 @@ function renderPedido(pedido, detalle) {
     </div>
 
     <div class="actions">
-      <button class="btn-pay btn-yappy" onclick="abrirYappy()">
-        <span>💚</span> Pagar con Yappy
-      </button>
-      ${switchPayUrl
-        ? `<button class="btn-pay btn-switchpay" onclick="pagarSwitchPay('${switchPayUrl}')">
-            <span>💳</span> Pagar con Switch Pay
-           </button>`
-        : `<button class="btn-pay btn-switchpay" onclick="enviarSwitchPay()">
-            <span>💳</span> Pagar con Switch Pay
-           </button>`
-      }
+      <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center;">
+        <btn-yappy
+          id="btn-yappy"
+          total="${total.toFixed(2)}"
+          subtotal="${(total - impuesto).toFixed(2)}"
+          taxes="${impuesto.toFixed(2)}"
+          shipping="0.00"
+          discount="0.00"
+          order-id="${pedido.id}"
+          success-url="https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok"
+          fail-url="https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail"
+          domain="https://mesas.mambabydiana.com"
+          subscription-key="7d9be35b-2c61-4afb-a3be-afe549b1de5f"
+          secret-key="WVBfODE2RkFGMUEtOTI1My0zRTE0LTg0RDEtQkFDRkNGQ0NBRjFGLjdkOWJlMzViLTJjNjEtNGFmYi1hM2JlLWFmZTU0OWIxZGU1Zg=="
+          color="brand"
+        ></btn-yappy>
+      </div>
       <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
         <span>🏪</span> Pagar en caja
       </button>
@@ -627,44 +634,12 @@ function closeModal() {
 }
 
 // ── YAPPY ─────────────────────────────────────────────────────
-function abrirYappy() {
+async function abrirYappy() {
   if (!pedidoActual) return;
-  const total = parseFloat(pedidoActual.total || 0);
 
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'modal-overlay';
-  overlay.innerHTML = `
-    <div class="modal">
-      <div class="modal-title">💚 Pagar con Yappy</div>
-      <div class="modal-sub">Ingresa tu número de celular. Recibirás una notificación en tu app Yappy para aprobar el pago.</div>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div class="tel-wrap">
-          <span class="tel-prefix">🇵🇦 +507</span>
-          <input type="tel" id="yappy-tel" class="tel-input" placeholder="6000-0000" maxlength="9"
-            onkeydown="if(event.key==='Enter') procesarYappy()" />
-        </div>
-        <div class="total-preview">
-          <span style="color:var(--muted)">Total a pagar</span>
-          <span style="font-weight:700; color:var(--accent)">${fmtMoney(total)}</span>
-        </div>
-        <button class="btn-pay btn-yappy" id="btn-yappy-pagar" onclick="procesarYappy()">
-          Enviar solicitud de pago
-        </button>
-        <button class="btn-pay btn-mesero" onclick="closeModal()">Cancelar</button>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  setTimeout(() => document.getElementById('yappy-tel')?.focus(), 150);
-}
-
-async function procesarYappy() {
-  const tel = document.getElementById('yappy-tel')?.value.replace(/\D/g, '');
-  if (!tel || tel.length < 7) { alert('Ingresa un número de celular válido'); return; }
-
-  const btn = document.getElementById('btn-yappy-pagar');
+  const btn = event.currentTarget;
   btn.disabled = true;
-  btn.textContent = 'Enviando...';
+  btn.textContent = 'Generando link...';
 
   try {
     const total    = parseFloat(pedidoActual.total    || 0);
@@ -682,26 +657,25 @@ async function procesarYappy() {
         subtotal: subtotal.toFixed(2),
         taxes:    impuesto.toFixed(2),
         orderId:  String(pedidoActual.id),
-        tel,
-        mesa: mesaNum
+        mesa:     mesaNum
       })
     });
 
     const data = await resp.json();
     if (data.error) throw new Error(data.error);
 
-    closeModal();
-
+    // Redirigir directamente a la app de Yappy
     if (data.url) {
       window.location.href = data.url;
     } else {
-      mostrarExito('¡Solicitud enviada!', 'Revisa tu app Yappy y aprueba el pago de ' + fmtMoney(total));
+      throw new Error('No se recibió URL de pago');
     }
 
   } catch(e) {
     alert('Error Yappy: ' + e.message);
+  } finally {
     btn.disabled = false;
-    btn.textContent = 'Enviar solicitud de pago';
+    btn.innerHTML = '<span>💚</span> Pagar con Yappy';
   }
 }
 
