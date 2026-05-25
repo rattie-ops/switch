@@ -499,22 +499,8 @@ function renderPedido(pedido, detalle) {
     </div>
 
     <div class="actions">
-      <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center;">
-        <btn-yappy
-          id="btn-yappy"
-          total="${total.toFixed(2)}"
-          subtotal="${(total - impuesto).toFixed(2)}"
-          taxes="${impuesto.toFixed(2)}"
-          shipping="0.00"
-          discount="0.00"
-          order-id="${pedido.id}"
-          success-url="https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok"
-          fail-url="https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail"
-          domain="https://mesas.mambabydiana.com"
-          subscription-key="7d9be35b-2c61-4afb-a3be-afe549b1de5f"
-          secret-key="WVBfODE2RkFGMUEtOTI1My0zRTE0LTg0RDEtQkFDRkNGQ0NBRjFGLjdkOWJlMzViLTJjNjEtNGFmYi1hM2JlLWFmZTU0OWIxZGU1Zg=="
-          color="brand"
-        ></btn-yappy>
+      <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center; min-height:50px;">
+        <!-- Yappy button injected here after order loads -->
       </div>
       <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
         <span>🏪</span> Pagar en caja
@@ -525,6 +511,25 @@ function renderPedido(pedido, detalle) {
       <button class="refresh-btn" onclick="recargar()">↻ Actualizar pedido</button>
     </div>
   `;
+  // Inyectar botón Yappy con datos reales del pedido
+  const yappyWrap = document.getElementById('yappy-btn-wrap');
+  if (yappyWrap) {
+    const btnYappy = document.createElement('btn-yappy');
+    btnYappy.setAttribute('total',            total.toFixed(2));
+    btnYappy.setAttribute('subtotal',         (total - impuesto).toFixed(2));
+    btnYappy.setAttribute('taxes',            impuesto.toFixed(2));
+    btnYappy.setAttribute('shipping',         '0.00');
+    btnYappy.setAttribute('discount',         '0.00');
+    btnYappy.setAttribute('order-id',         String(pedido.id));
+    btnYappy.setAttribute('success-url',      `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok`);
+    btnYappy.setAttribute('fail-url',         `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail`);
+    btnYappy.setAttribute('domain',           'https://mesas.mambabydiana.com');
+    btnYappy.setAttribute('subscription-key', '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
+    btnYappy.setAttribute('secret-key',       'WVBfODE2RkFGMUEtOTI1My0zRTE0LTg0RDEtQkFDRkNGQ0NBRjFGLjdkOWJlMzViLTJjNjEtNGFmYi1hM2JlLWFmZTU0OWIxZGU1Zg==');
+    btnYappy.setAttribute('color',            'brand');
+    btnYappy.style.width = '100%';
+    yappyWrap.appendChild(btnYappy);
+  }
 }
 
 function mostrarVacio(titulo, sub) {
