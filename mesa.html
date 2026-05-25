@@ -511,8 +511,6 @@ function renderPedido(pedido, detalle) {
       </div>
       <div id="yappy-btn-wrap" style="display:none;"></div>
     `;
-  // Inyectar botón Yappy con datos reales del pedido
-  // Guardar datos del pedido para usar en el modal
   window._yappyData = {
     merchantId: '7d9be35b-2c61-4afb-a3be-afe549b1de5f',
     urlDomain:  'https://mesas.mambabydiana.com',
@@ -523,7 +521,6 @@ function renderPedido(pedido, detalle) {
     mesa:       mesaNum,
     totalFmt:   fmtMoney(total)
   };
-}
 }
 
 function mostrarVacio(titulo, sub) {
