@@ -9,17 +9,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f4f5f7;
+    --bg: #f7f5f2;
     --surface: #ffffff;
-    --surface2: #f0f1f3;
-    --border: #e0e2e8;
-    --accent: #E8411A;
-    --green: #1DA760;
-    --yellow: #F5A623;
-    --red: #E8411A;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --dim: #c0c4cc;
+    --surface2: #f0ede8;
+    --border: #e2ddd6;
+    --accent: #2d5a27;
+    --green: #2d5a27;
+    --yellow: #c8973a;
+    --red: #b94040;
+    --text: #1c1c1c;
+    --muted: #6b6560;
+    --dim: #c0b9b0;
     --font: Inter, system-ui, -apple-system, sans-serif;
     --mono: ui-monospace, "SF Mono", Consolas, monospace;
     --radius: 12px;
@@ -46,7 +46,7 @@
     z-index: 10;
   }
 
-  .header-left { display: flex; flex-direction: column; gap: 2px; }
+  .header-left { display: flex; flex-direction: row; align-items: center; gap: 10px; }
 
   .header-brand {
     font-size: 11px;
@@ -209,6 +209,7 @@
   .btn-switchpay {
     background: var(--accent);
     color: #fff;
+    letter-spacing: 0.3px;
   }
 
   .btn-mesero {
@@ -305,7 +306,6 @@
     text-decoration: underline;
   }
 
-  /* QR PRINT SECTION (hidden on screen, shown when printing) */
   @media print {
     body * { visibility: hidden; }
     #qr-section, #qr-section * { visibility: visible; }
@@ -317,7 +317,7 @@
 
 <div class="header">
   <div class="header-left">
-    <div class="header-brand">Switch Connect</div>
+    <img src="https://d2j6dbq0eux0bg.cloudfront.net/images/39799274/1841556878.jpg" alt="Mamba by Diana" style="height:38px; width:auto; border-radius:6px; object-fit:cover;" />
     <div class="header-mesa" id="header-mesa">Cargando...</div>
   </div>
   <div class="header-status status-loading" id="header-status">•••</div>
@@ -334,52 +334,65 @@
 const API_URL  = 'https://mambabydiana.switch-soft.com';
 const API_USER = 'admin';
 const API_PASS = 'Mamba2020';
-const SUPABASE_URL = 'https://epzwpxuueucvkuexqpok.supabase.co';
 
-let TOKEN = '';
+// Leer número de mesa desde ?mesa=1
+const params     = new URLSearchParams(location.search);
+const mesaNum    = params.get('mesa') || '1';
+const mesaCodigo = mesaNum.padStart(3, '0');  // "1" → "001"
+
+let TOKEN        = null;
 let pedidoActual = null;
 
-async function init() {
-  try {
-    await login();
-    await cargarPedido();
-  } catch(e) {
-    mostrarError('Error: ' + e.message + ' — ' + (e.stack || ''));
-  }
-}
+document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
+document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
 
-async function fetchConTimeout(url, options = {}, segundos = 10) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), segundos * 1000);
-  try {
-    const r = await fetch(url, { ...options, signal: controller.signal });
-    clearTimeout(timer);
-    return r;
-  } catch(e) {
-    clearTimeout(timer);
-    if (e.name === 'AbortError') throw new Error('Tiempo de espera agotado — verifica tu conexión');
-    throw e;
-  }
-}
-
-async function login() {
+// ── AUTENTICACIÓN ─────────────────────────────────────────────
+async function obtenerToken() {
   const fd = new FormData();
   fd.append('usuario', API_USER);
   fd.append('password', API_PASS);
-  const r = await fetchConTimeout(API_URL + '/autenticacion', { method: 'POST', body: fd });
+
+  const r = await fetch(API_URL + '/autenticacion', {
+    method: 'POST',
+    body: fd
+  });
   const data = await r.json();
-  if (data.error) throw new Error('Login fallido: ' + data.error.message);
+  if (data.error) throw new Error('Auth: ' + data.error.message);
   TOKEN = data.data.token;
 }
 
+// ── INIT ──────────────────────────────────────────────────────
+async function init() {
+  try {
+    await obtenerToken();
+    await cargarPedido();
+  } catch(e) {
+    mostrarError(e.message);
+  }
+}
+
+init();
+
+// ── API GET ───────────────────────────────────────────────────
 async function apiGet(path) {
   const r = await fetch(API_URL + path, {
     headers: { 'Authorization': TOKEN }
   });
   const data = await r.json();
+
   if (data.error) {
-    if (data.error.code == '0005' && data.new_token) TOKEN = data.new_token;
-    else throw new Error(data.error.message);
+    // Token expirado con menos de 15 min → la API devuelve new_token
+    if (data.error.code == '0005' && data.new_token) {
+      TOKEN = data.new_token;
+      // Reintentar la misma llamada con el nuevo token
+      return apiGet(path);
+    }
+    // Token inválido → re-autenticar y reintentar una vez
+    if (data.error.code == '0006') {
+      await obtenerToken();
+      return apiGet(path);
+    }
+    throw new Error(data.error.message);
   }
   return data.data;
 }
@@ -390,58 +403,41 @@ function fmtMoney(v) {
   return '$' + n.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// ── MAPA DE MESAS → clienteId ─────────────────────────────────
+const MESA_IDS = {
+  '1': 105,
+  '2': 2062,
+  '3': 2063,
+  '4': 2079,
+  '5': 2080,
+  '6': 2081,
+  '7': 2082
+};
+
 // ── BUSCAR PEDIDO ─────────────────────────────────────────────
 async function cargarPedido() {
-  const mesaClientes = {
-    '1': 105,
-    '2': 2062,
-    '3': 2063,
-    '4': 2079,
-    '5': 2080,
-    '6': 2081,
-    '7': 2082,
-  };
+  // 1. Obtener clienteId directamente del mapa
+  const clienteId = MESA_IDS[mesaNum];
 
-  const clienteId = mesaClientes[mesaNum];
   if (!clienteId) {
-    mostrarVacio('Mesa no configurada', 'Mesa ' + mesaNum + ' no existe en el sistema.');
+    mostrarVacio('Mesa no configurada', 'La mesa ' + mesaNum + ' no está configurada en el sistema.');
     return;
   }
 
-  // Buscar pedidos activos para ese clienteId (hoy)
-  const hoy = new Date().toISOString().slice(0, 10);
-  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
+  // 2. Buscar pedidos para ese cliente
+  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&porPagina=5&paginaActual=1');
   const pedidos = dp.pedidos || [];
 
   if (!pedidos.length) {
     setStatus('Sin pedido', 'status-vacio');
-    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa hoy.\nLlama al mesero para que tome tu orden.');
+    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa.\nAcércate a la caja para realizar tu orden.');
     return;
   }
 
+  // 3. Tomar el más reciente y cargar detalle
   const pedido = pedidos[0];
   pedidoActual = pedido;
 
-  const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
-  renderPedido(pedido, dd);
-}
-
-  // 2. Buscar pedidos activos para ese cliente (hoy)
-  const hoy = new Date().toISOString().slice(0, 10);
-  const dp = await apiGet('/apipedido/lista?clienteId=' + cliente.id + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
-  const pedidos = dp.pedidos || [];
-
-  if (!pedidos.length) {
-    setStatus('Sin pedido', 'status-vacio');
-    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa hoy.\nLlama al mesero para que tome tu orden.');
-    return;
-  }
-
-  // Tomar el pedido más reciente
-  const pedido = pedidos[0];
-  pedidoActual = pedido;
-
-  // 3. Cargar detalle
   const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
   renderPedido(pedido, dd);
 }
@@ -450,16 +446,16 @@ async function cargarPedido() {
 function renderPedido(pedido, detalle) {
   setStatus('Pedido activo', 'status-activo');
 
-  const lineas = detalle.detalle || [];
-  const subtotal  = parseFloat(pedido.subTotal || 0);
+  const lineas    = detalle.detalle || [];
+  const subtotal  = parseFloat(pedido.subTotal  || 0);
   const descuento = parseFloat(pedido.descuento || 0);
-  const impuesto  = parseFloat(pedido.impuesto || 0);
-  const total     = parseFloat(pedido.total || 0);
+  const impuesto  = parseFloat(pedido.impuesto  || 0);
+  const total     = parseFloat(pedido.total     || 0);
 
   const itemsHtml = lineas.map(l => {
-    const cant  = parseFloat(l.cantidad || 0);
-    const precio = parseFloat(l.precio || 0);
-    const sub   = cant * precio * (1 - parseFloat(l.descuento || 0) / 100);
+    const cant   = parseFloat(l.cantidad || 0);
+    const precio = parseFloat(l.precio   || 0);
+    const sub    = cant * precio * (1 - parseFloat(l.descuento || 0) / 100);
     return `<div class="line-item">
       <div class="line-qty">${cant % 1 === 0 ? cant : cant.toFixed(2)}</div>
       <div class="line-desc">
@@ -484,16 +480,21 @@ function renderPedido(pedido, detalle) {
 
     <div class="totals">
       ${descuento > 0 ? `<div class="total-row"><span>Descuento</span><span>-${fmtMoney(descuento)}</span></div>` : ''}
-      ${impuesto  > 0 ? `<div class="total-row"><span>Impuesto</span><span>${fmtMoney(impuesto)}</span></div>` : ''}
+      ${impuesto  > 0 ? `<div class="total-row"><span>Impuesto</span><span>${fmtMoney(impuesto)}</span></div>`  : ''}
       <div class="total-row grand"><span>Total</span><span>${fmtMoney(total)}</span></div>
     </div>
 
     <div class="actions">
-      <button class="btn-pay btn-switchpay" onclick="abrirYappy()">
-        <img src="https://www.yappy.com.pa/images/logo-yappy.svg" alt="Yappy" style="height:22px;filter:brightness(0) invert(1)"> Pagar con Yappy
-      </button>
-      <button class="btn-pay btn-mesero" onclick="llamarMesero()">
-        <span>🙋</span> Pagar con el mesero
+      ${switchPayUrl
+        ? `<button class="btn-pay btn-switchpay" onclick="pagarSwitchPay('${switchPayUrl}')">
+            <span>💳</span> Pagar con Switch Pay
+           </button>`
+        : `<button class="btn-pay btn-switchpay" onclick="enviarSwitchPay()">
+            <span>💳</span> Pagar con Switch Pay
+           </button>`
+      }
+      <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
+        <span>🏪</span> Pagar en caja
       </button>
     </div>
 
@@ -534,111 +535,56 @@ function setStatus(txt, cls) {
   el.className = 'header-status ' + cls;
 }
 
-// ── YAPPY ─────────────────────────────────────────────────────
-function abrirYappy() {
-  if (!pedidoActual) return;
-
-  // Verificar si viene de pago exitoso
-  const urlParams = new URLSearchParams(location.search);
-  if (urlParams.get('pago') === 'ok') {
-    mostrarExito('¡Pago recibido!', 'Tu pago con Yappy fue procesado exitosamente.');
-    return;
-  }
-
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'modal-overlay';
-  overlay.innerHTML = `
-    <div class="modal">
-      <div class="modal-title">💚 Pagar con Yappy</div>
-      <div class="modal-sub">Ingresa tu número de celular. Recibirás una notificación en tu app Yappy para aprobar el pago.</div>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div style="display:flex; align-items:center; background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; overflow:hidden;">
-          <span style="padding:12px 14px; font-size:15px; color:var(--muted); border-right:1px solid var(--border);">🇵🇦 +507</span>
-          <input type="tel" id="yappy-tel" placeholder="6000-0000" maxlength="8"
-            style="flex:1; background:none; border:none; padding:12px 14px; font-size:16px; font-family:var(--font); color:var(--text); outline:none;"
-            onkeydown="if(event.key==='Enter') procesarYappy()" />
-        </div>
-        <div style="background:var(--surface2); border-radius:8px; padding:10px 14px; display:flex; justify-content:space-between; font-size:14px;">
-          <span style="color:var(--muted)">Total a pagar</span>
-          <span style="font-weight:700; color:var(--accent)">${fmtMoney(pedidoActual.total)}</span>
-        </div>
-        <button class="btn-pay btn-switchpay" id="btn-yappy-pagar" onclick="procesarYappy()">
-          Enviar solicitud de pago
-        </button>
-        <button class="btn-pay btn-mesero" onclick="closeModal()">Cancelar</button>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  setTimeout(() => document.getElementById('yappy-tel')?.focus(), 100);
+// ── PAGOS ─────────────────────────────────────────────────────
+function pagarSwitchPay(url) {
+  window.open(url, '_blank');
 }
 
-async function procesarYappy() {
-  const tel = document.getElementById('yappy-tel')?.value.replace(/\D/g, '');
-  if (!tel || tel.length < 7) {
-    alert('Ingresa un número de celular válido');
-    return;
-  }
-
-  const btn = document.getElementById('btn-yappy-pagar');
+async function enviarSwitchPay() {
+  if (!pedidoActual) return;
+  const btn = event.target;
   btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
+  btn.textContent = 'Enviando link...';
   try {
-    const total   = parseFloat(pedidoActual.total || 0);
-    const impuesto = parseFloat(pedidoActual.impuesto || 0);
-    const subtotal = total - impuesto;
-
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/yappy-pago`, {
+    const fd = new FormData();
+    fd.append('id', pedidoActual.id);
+    fd.append('email', pedidoActual.clienteEmail || '');
+    const r = await fetch(API_URL + '/apicobranzapedido/switchpay', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        total: total.toFixed(2),
-        subtotal: subtotal.toFixed(2),
-        taxes: impuesto.toFixed(2),
-        orderId: pedidoActual.id,
-        tel,
-        mesa: mesaNum
-      })
+      headers: { 'Authorization': TOKEN },
+      body: fd
     });
+    const data = await r.json();
+    if (data.error) throw new Error(data.error.message);
 
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-
-    // Redirigir a URL de pago de Yappy
-    if (data.url) {
-      window.location.href = data.url;
+    if (pedidoActual.urlswitchpay) {
+      window.open(pedidoActual.urlswitchpay, '_blank');
     } else {
-      // Si no hay URL de redirección, notificación fue enviada directamente
-      closeModal();
-      mostrarExito('¡Solicitud enviada!', 'Revisa tu app Yappy y aprueba el pago de ' + fmtMoney(total));
+      mostrarExito('Link de pago enviado', 'Revisa el correo electrónico para completar el pago.');
     }
-
   } catch(e) {
     alert('Error: ' + e.message);
+  } finally {
     btn.disabled = false;
-    btn.textContent = 'Enviar solicitud de pago';
+    btn.textContent = '💳 Pagar con Switch Pay';
   }
 }
 
-function llamarMesero() {
+function pagarEnCaja() {
   showModal(
-    '🙋 Llamando al mesero',
-    'El mesero se acercará en un momento para procesar tu pago en efectivo o tarjeta.',
-    [
-      { label: 'Entendido', cls: 'btn-switchpay', action: closeModal }
-    ]
+    '🏪 Pagar en caja',
+    'Dirígete a la caja para realizar tu pago en efectivo o tarjeta.',
+    [{ label: 'Entendido', cls: 'btn-switchpay', action: closeModal }]
   );
 }
 
 function mostrarExito(titulo, sub) {
-  const main = document.getElementById('main');
   const banner = `<div class="success-banner">
     <div class="success-icon">✅</div>
     <div class="success-title">${titulo}</div>
     <div class="success-sub">${sub}</div>
   </div>`;
-  main.insertAdjacentHTML('afterbegin', banner);
+  document.getElementById('main').insertAdjacentHTML('afterbegin', banner);
 }
 
 // ── MODAL ─────────────────────────────────────────────────────
@@ -662,37 +608,19 @@ function closeModal() {
   if (el) el.remove();
 }
 
-// Leer número de mesa desde ?mesa=1
-const params     = new URLSearchParams(location.search);
-const mesaNum    = params.get('mesa') || '1';
-const mesaCodigo = mesaNum.padStart(3, '0');
-
-document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
-document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
-
-if (params.get('pago') === 'ok') {
-  setTimeout(() => mostrarExito('¡Pago completado!', 'Tu pago con Yappy fue procesado exitosamente. ¡Gracias!'), 500);
-} else if (params.get('pago') === 'fail') {
-  setTimeout(() => mostrarError('Pago no completado. Intenta de nuevo o llama al mesero.'), 500);
-}
-
-init();
-
+// ── REFRESH ───────────────────────────────────────────────────
 async function recargar() {
   document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
   setStatus('•••', 'status-loading');
   try {
-    if (!TOKEN) await login();
+    if (!TOKEN) await obtenerToken();
     await cargarPedido();
   } catch(e) {
     mostrarError(e.message);
   }
 }
 
-// Auto-refresh cada 30 segundos
-setInterval(() => {
-  if (document.visibilityState === 'visible') recargar();
-}, 30000);
+
 </script>
 
 </body>
