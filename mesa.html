@@ -331,37 +331,31 @@
 </div>
 
 <script>
-const API_URL = 'https://mambabydiana.switch-soft.com';
+const API_URL  = 'https://mambabydiana.switch-soft.com';
+const API_USER = 'admin';
+const API_PASS = 'Mamba2020';
 const SUPABASE_URL = 'https://epzwpxuueucvkuexqpok.supabase.co';
-const TOKEN_FIJO = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibGljZW5jaWEiOiIxNjIxOTc3Mzk1NjBBRDY5MzM0QTE1RSIsInRva2Vua2V5IjoyMjUyNDU3MDExLCJrZXkiOiJTWDBKUHpBbEJrNjNleTIifQ.BZwS47qf8QAE4yff5BMd21WFEvWvMndwiAQ3FeAnLFg';
 
-// Leer número de mesa desde ?mesa=1
-const params  = new URLSearchParams(location.search);
-const mesaNum    = params.get('mesa') || '1';
-const mesaCodigo = mesaNum.padStart(3, '0');  // "1" → "001", "7" → "007"
-
-let TOKEN = TOKEN_FIJO;
-
-// ── INIT ──────────────────────────────────────────────────────
-document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
-document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
-
-// Detectar retorno de pago exitoso
-const _urlParams = new URLSearchParams(location.search);
-if (_urlParams.get('pago') === 'ok') {
-  setTimeout(() => mostrarExito('¡Pago completado!', 'Tu pago con Yappy fue procesado exitosamente. ¡Gracias!'), 500);
-} else if (_urlParams.get('pago') === 'fail') {
-  setTimeout(() => mostrarError('Pago no completado. Intenta de nuevo o llama al mesero.'), 500);
-}
-
-init();
+let TOKEN = '';
+let pedidoActual = null;
 
 async function init() {
   try {
+    await login();
     await cargarPedido();
   } catch(e) {
     mostrarError(e.message);
   }
+}
+
+async function login() {
+  const fd = new FormData();
+  fd.append('usuario', API_USER);
+  fd.append('password', API_PASS);
+  const r = await fetch(API_URL + '/autenticacion', { method: 'POST', body: fd });
+  const data = await r.json();
+  if (data.error) throw new Error('No se pudo conectar: ' + data.error.message);
+  TOKEN = data.data.token;
 }
 
 async function apiGet(path) {
@@ -630,12 +624,27 @@ function closeModal() {
   if (el) el.remove();
 }
 
-// ── REFRESH ───────────────────────────────────────────────────
+// Leer número de mesa desde ?mesa=1
+const params     = new URLSearchParams(location.search);
+const mesaNum    = params.get('mesa') || '1';
+const mesaCodigo = mesaNum.padStart(3, '0');
+
+document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
+document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
+
+if (params.get('pago') === 'ok') {
+  setTimeout(() => mostrarExito('¡Pago completado!', 'Tu pago con Yappy fue procesado exitosamente. ¡Gracias!'), 500);
+} else if (params.get('pago') === 'fail') {
+  setTimeout(() => mostrarError('Pago no completado. Intenta de nuevo o llama al mesero.'), 500);
+}
+
+init();
+
 async function recargar() {
   document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
   setStatus('•••', 'status-loading');
   try {
-    if (!TOKEN) TOKEN = TOKEN_FIJO;
+    if (!TOKEN) await login();
     await cargarPedido();
   } catch(e) {
     mostrarError(e.message);
