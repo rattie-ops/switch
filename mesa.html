@@ -220,6 +220,12 @@
 
   .btn-mesero:hover { border-color: var(--accent); }
 
+  .btn-yappy { background: #00C244; color: #fff; }
+  .tel-wrap { display:flex; align-items:center; background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; overflow:hidden; }
+  .tel-prefix { padding:12px 14px; font-size:15px; color:var(--muted); border-right:1px solid var(--border); white-space:nowrap; }
+  .tel-input { flex:1; background:none; border:none; padding:12px 14px; font-size:16px; font-family:var(--font); color:var(--text); outline:none; }
+  .total-preview { background:var(--surface2); border-radius:8px; padding:10px 14px; display:flex; justify-content:space-between; font-size:14px; }
+
   /* EMPTY / LOADING / ERROR */
   .state-box {
     background: var(--surface);
@@ -334,6 +340,7 @@
 const API_URL  = 'https://mambabydiana.switch-soft.com';
 const API_USER = 'admin';
 const API_PASS = 'Mamba2020';
+const SUPABASE_URL = 'https://epzwpxuueucvkuexqpok.supabase.co';
 
 // Leer número de mesa desde ?mesa=1
 const params     = new URLSearchParams(location.search);
@@ -348,17 +355,24 @@ document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
 
 // ── AUTENTICACIÓN ─────────────────────────────────────────────
 async function obtenerToken() {
-  const fd = new FormData();
-  fd.append('usuario', API_USER);
-  fd.append('password', API_PASS);
+  return new Promise((resolve, reject) => {
+    const fd = new FormData();
+    fd.append('usuario', API_USER);
+    fd.append('password', API_PASS);
 
-  const r = await fetch(API_URL + '/autenticacion', {
-    method: 'POST',
-    body: fd
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', API_URL + '/autenticacion');
+    xhr.onload = () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (data.error) return reject(new Error('Auth: ' + data.error.message));
+        TOKEN = data.data.token;
+        resolve();
+      } catch(e) { reject(e); }
+    };
+    xhr.onerror = () => reject(new Error('No se pudo conectar al servidor'));
+    xhr.send(fd);
   });
-  const data = await r.json();
-  if (data.error) throw new Error('Auth: ' + data.error.message);
-  TOKEN = data.data.token;
 }
 
 // ── INIT ──────────────────────────────────────────────────────
@@ -485,6 +499,9 @@ function renderPedido(pedido, detalle) {
     </div>
 
     <div class="actions">
+      <button class="btn-pay btn-yappy" onclick="abrirYappy()">
+        <span>💚</span> Pagar con Yappy
+      </button>
       ${switchPayUrl
         ? `<button class="btn-pay btn-switchpay" onclick="pagarSwitchPay('${switchPayUrl}')">
             <span>💳</span> Pagar con Switch Pay
@@ -608,7 +625,83 @@ function closeModal() {
   if (el) el.remove();
 }
 
-// ── REFRESH ───────────────────────────────────────────────────
+// ── YAPPY ─────────────────────────────────────────────────────
+function abrirYappy() {
+  if (!pedidoActual) return;
+  const total = parseFloat(pedidoActual.total || 0);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-title">💚 Pagar con Yappy</div>
+      <div class="modal-sub">Ingresa tu número de celular. Recibirás una notificación en tu app Yappy para aprobar el pago.</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="tel-wrap">
+          <span class="tel-prefix">🇵🇦 +507</span>
+          <input type="tel" id="yappy-tel" class="tel-input" placeholder="6000-0000" maxlength="9"
+            onkeydown="if(event.key==='Enter') procesarYappy()" />
+        </div>
+        <div class="total-preview">
+          <span style="color:var(--muted)">Total a pagar</span>
+          <span style="font-weight:700; color:var(--accent)">${fmtMoney(total)}</span>
+        </div>
+        <button class="btn-pay btn-yappy" id="btn-yappy-pagar" onclick="procesarYappy()">
+          Enviar solicitud de pago
+        </button>
+        <button class="btn-pay btn-mesero" onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('yappy-tel')?.focus(), 150);
+}
+
+async function procesarYappy() {
+  const tel = document.getElementById('yappy-tel')?.value.replace(/\D/g, '');
+  if (!tel || tel.length < 7) { alert('Ingresa un número de celular válido'); return; }
+
+  const btn = document.getElementById('btn-yappy-pagar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  try {
+    const total    = parseFloat(pedidoActual.total    || 0);
+    const impuesto = parseFloat(pedidoActual.impuesto || 0);
+    const subtotal = total - impuesto;
+
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/yappy-pago`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        total:    total.toFixed(2),
+        subtotal: subtotal.toFixed(2),
+        taxes:    impuesto.toFixed(2),
+        orderId:  String(pedidoActual.id),
+        tel,
+        mesa: mesaNum
+      })
+    });
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+
+    closeModal();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      mostrarExito('¡Solicitud enviada!', 'Revisa tu app Yappy y aprueba el pago de ' + fmtMoney(total));
+    }
+
+  } catch(e) {
+    alert('Error Yappy: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Enviar solicitud de pago';
+  }
+}
+
+
 async function recargar() {
   document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
   setStatus('•••', 'status-loading');
