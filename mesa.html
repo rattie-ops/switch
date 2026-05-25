@@ -344,7 +344,21 @@ async function init() {
     await login();
     await cargarPedido();
   } catch(e) {
-    mostrarError(e.message);
+    mostrarError('Error: ' + e.message + ' — ' + (e.stack || ''));
+  }
+}
+
+async function fetchConTimeout(url, options = {}, segundos = 10) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), segundos * 1000);
+  try {
+    const r = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return r;
+  } catch(e) {
+    clearTimeout(timer);
+    if (e.name === 'AbortError') throw new Error('Tiempo de espera agotado — verifica tu conexión');
+    throw e;
   }
 }
 
@@ -352,9 +366,9 @@ async function login() {
   const fd = new FormData();
   fd.append('usuario', API_USER);
   fd.append('password', API_PASS);
-  const r = await fetch(API_URL + '/autenticacion', { method: 'POST', body: fd });
+  const r = await fetchConTimeout(API_URL + '/autenticacion', { method: 'POST', body: fd });
   const data = await r.json();
-  if (data.error) throw new Error('No se pudo conectar: ' + data.error.message);
+  if (data.error) throw new Error('Login fallido: ' + data.error.message);
   TOKEN = data.data.token;
 }
 
