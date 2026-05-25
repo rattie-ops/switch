@@ -340,7 +340,8 @@
 const API_URL  = 'https://mambabydiana.switch-soft.com';
 const API_USER = 'admin';
 const API_PASS = 'Mamba2020';
-const SUPABASE_URL = 'https://epzwpxuueucvkuexqpok.supabase.co';
+const SUPABASE_URL  = 'https://epzwpxuueucvkuexqpok.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwendweHV1ZXVjdmt1ZXhxcG9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAyMDUsImV4cCI6MjA5NTI1NjIwNX0.9P9p8ojRVvrVIU7F3XSIhH1-o7aaOmAOMxhf5gfNjqs';
 
 // Leer número de mesa desde ?mesa=1
 const params     = new URLSearchParams(location.search);
@@ -672,7 +673,10 @@ async function procesarYappy() {
 
     const resp = await fetch(`${SUPABASE_URL}/functions/v1/yappy-pago`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON}`
+      },
       body: JSON.stringify({
         total:    total.toFixed(2),
         subtotal: subtotal.toFixed(2),
