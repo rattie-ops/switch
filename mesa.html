@@ -647,8 +647,6 @@ async function procesarPagoYappy() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': token },
       body: JSON.stringify({
-        merchantId:  d.merchantId,
-        orderId:     d.orderId.substring(0, 15),
         domain:      d.urlDomain,
         paymentDate: Date.now(),
         aliasYappy:  tel,
