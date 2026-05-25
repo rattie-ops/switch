@@ -355,11 +355,14 @@ document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
 
 // ── AUTENTICACIÓN ─────────────────────────────────────────────
 async function obtenerToken() {
+  // Usar token cacheado si existe
+  const cached = sessionStorage.getItem('sw_token');
+  if (cached) { TOKEN = cached; return; }
+
   return new Promise((resolve, reject) => {
     const fd = new FormData();
     fd.append('usuario', API_USER);
     fd.append('password', API_PASS);
-
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_URL + '/autenticacion');
     xhr.onload = () => {
@@ -367,6 +370,7 @@ async function obtenerToken() {
         const data = JSON.parse(xhr.responseText);
         if (data.error) return reject(new Error('Auth: ' + data.error.message));
         TOKEN = data.data.token;
+        sessionStorage.setItem('sw_token', TOKEN);
         resolve();
       } catch(e) { reject(e); }
     };
@@ -389,20 +393,16 @@ init();
 
 // ── API GET ───────────────────────────────────────────────────
 async function apiGet(path) {
-  const r = await fetch(API_URL + path, {
-    headers: { 'Authorization': TOKEN }
-  });
+  const r = await fetch(API_URL + path, { headers: { 'Authorization': TOKEN } });
   const data = await r.json();
-
   if (data.error) {
-    // Token expirado con menos de 15 min → la API devuelve new_token
     if (data.error.code == '0005' && data.new_token) {
       TOKEN = data.new_token;
-      // Reintentar la misma llamada con el nuevo token
+      sessionStorage.setItem('sw_token', TOKEN);
       return apiGet(path);
     }
-    // Token inválido → re-autenticar y reintentar una vez
     if (data.error.code == '0006') {
+      sessionStorage.removeItem('sw_token');
       await obtenerToken();
       return apiGet(path);
     }
@@ -419,27 +419,19 @@ function fmtMoney(v) {
 
 // ── MAPA DE MESAS → clienteId ─────────────────────────────────
 const MESA_IDS = {
-  '1': 105,
-  '2': 2062,
-  '3': 2063,
-  '4': 2079,
-  '5': 2080,
-  '6': 2081,
-  '7': 2082
+  '1': 105, '2': 2062, '3': 2063, '4': 2079,
+  '5': 2080, '6': 2081, '7': 2082
 };
 
 // ── BUSCAR PEDIDO ─────────────────────────────────────────────
 async function cargarPedido() {
-  // 1. Obtener clienteId directamente del mapa
   const clienteId = MESA_IDS[mesaNum];
-
   if (!clienteId) {
-    mostrarVacio('Mesa no configurada', 'La mesa ' + mesaNum + ' no está configurada en el sistema.');
+    mostrarVacio('Mesa no configurada', 'La mesa ' + mesaNum + ' no está configurada.');
     return;
   }
 
-  // 2. Buscar pedidos para ese cliente
-  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&porPagina=5&paginaActual=1');
+  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&porPagina=1&paginaActual=1');
   const pedidos = dp.pedidos || [];
 
   if (!pedidos.length) {
@@ -448,10 +440,10 @@ async function cargarPedido() {
     return;
   }
 
-  // 3. Tomar el más reciente y cargar detalle
   const pedido = pedidos[0];
   pedidoActual = pedido;
 
+  // Cargar detalle en paralelo con nada — listo para futuras optimizaciones
   const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
   renderPedido(pedido, dd);
 }
@@ -647,6 +639,8 @@ async function procesarPagoYappy() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': token },
       body: JSON.stringify({
+        merchantId:  d.merchantId,
+        orderId:     d.orderId.substring(0, 15),
         domain:      d.urlDomain,
         paymentDate: Date.now(),
         aliasYappy:  tel,
