@@ -378,15 +378,39 @@ function fmtMoney(v) {
 
 // ── BUSCAR PEDIDO ─────────────────────────────────────────────
 async function cargarPedido() {
-  // Buscar cliente por código "001", "002", etc.
-  const dc = await apiGet('/apicliente/lista?filtro=' + encodeURIComponent(mesaCodigo) + '&porPagina=10&paginaActual=1');
-  const clientes = dc.clientes || [];
-  const cliente = clientes.find(c => (c.codigo || '').trim() === mesaCodigo);
+  const mesaClientes = {
+    '1': 105,
+    '2': 2062,
+    '3': 2063,
+    '4': 2079,
+    '5': 2080,
+    '6': 2081,
+    '7': 2082,
+  };
 
-  if (!cliente) {
-    mostrarVacio('Mesa no configurada', 'No encontramos el cliente con código "' + mesaCodigo + '" en el sistema.');
+  const clienteId = mesaClientes[mesaNum];
+  if (!clienteId) {
+    mostrarVacio('Mesa no configurada', 'Mesa ' + mesaNum + ' no existe en el sistema.');
     return;
   }
+
+  // Buscar pedidos activos para ese clienteId (hoy)
+  const hoy = new Date().toISOString().slice(0, 10);
+  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&desde=' + hoy + '&hasta=' + hoy + '&estatus=Activo&porPagina=5&paginaActual=1');
+  const pedidos = dp.pedidos || [];
+
+  if (!pedidos.length) {
+    setStatus('Sin pedido', 'status-vacio');
+    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa hoy.\nLlama al mesero para que tome tu orden.');
+    return;
+  }
+
+  const pedido = pedidos[0];
+  pedidoActual = pedido;
+
+  const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
+  renderPedido(pedido, dd);
+}
 
   // 2. Buscar pedidos activos para ese cliente (hoy)
   const hoy = new Date().toISOString().slice(0, 10);
