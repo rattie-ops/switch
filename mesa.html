@@ -515,21 +515,17 @@ function renderPedido(pedido, detalle) {
   const yappyWrap = document.getElementById('yappy-btn-wrap');
   if (yappyWrap) {
     const btnYappy = document.createElement('btn-yappy');
-    btnYappy.setAttribute('merchant-id',      '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
-    btnYappy.setAttribute('payment-date',     String(Date.now()));
-    btnYappy.setAttribute('url-domain',       'https://mesas.mambabydiana.com');
-    btnYappy.setAttribute('total',            total.toFixed(2));
-    btnYappy.setAttribute('subtotal',         (total - impuesto).toFixed(2));
-    btnYappy.setAttribute('taxes',            impuesto.toFixed(2));
-    btnYappy.setAttribute('shipping',         '0.00');
-    btnYappy.setAttribute('discount',         '0.00');
-    btnYappy.setAttribute('order-id',         String(pedido.id));
-    btnYappy.setAttribute('success-url',      `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok`);
-    btnYappy.setAttribute('fail-url',         `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail`);
-    btnYappy.setAttribute('domain',           'https://mesas.mambabydiana.com');
-    btnYappy.setAttribute('subscription-key', '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
-    btnYappy.setAttribute('secret-key',       'WVBfODE2RkFGMUEtOTI1My0zRTE0LTg0RDEtQkFDRkNGQ0NBRjFGLjdkOWJlMzViLTJjNjEtNGFmYi1hM2JlLWFmZTU0OWIxZGU1Zg==');
-    btnYappy.setAttribute('color',            'brand');
+    btnYappy.setAttribute('merchant-id',  '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
+    btnYappy.setAttribute('url-domain',   'https://mesas.mambabydiana.com');
+    btnYappy.setAttribute('order-id',     String(pedido.id));
+    btnYappy.setAttribute('total',        total.toFixed(2));
+    btnYappy.setAttribute('subtotal',     (total - impuesto).toFixed(2));
+    btnYappy.setAttribute('taxes',        impuesto.toFixed(2));
+    btnYappy.setAttribute('shipping',     '0.00');
+    btnYappy.setAttribute('discount',     '0.00');
+    btnYappy.setAttribute('success-url',  `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok`);
+    btnYappy.setAttribute('fail-url',     `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail`);
+    btnYappy.setAttribute('color',        'brand');
     btnYappy.style.width = '100%';
     yappyWrap.appendChild(btnYappy);
   }
