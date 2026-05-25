@@ -341,8 +341,6 @@
 const API_URL  = 'https://mambabydiana.switch-soft.com';
 const API_USER = 'admin';
 const API_PASS = 'Mamba2020';
-const SUPABASE_URL  = 'https://epzwpxuueucvkuexqpok.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwendweHV1ZXVjdmt1ZXhxcG9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAyMDUsImV4cCI6MjA5NTI1NjIwNX0.9P9p8ojRVvrVIU7F3XSIhH1-o7aaOmAOMxhf5gfNjqs';
 
 // Leer número de mesa desde ?mesa=1
 const params     = new URLSearchParams(location.search);
@@ -634,52 +632,6 @@ function closeModal() {
 }
 
 // ── YAPPY ─────────────────────────────────────────────────────
-async function abrirYappy() {
-  if (!pedidoActual) return;
-
-  const btn = event.currentTarget;
-  btn.disabled = true;
-  btn.textContent = 'Generando link...';
-
-  try {
-    const total    = parseFloat(pedidoActual.total    || 0);
-    const impuesto = parseFloat(pedidoActual.impuesto || 0);
-    const subtotal = total - impuesto;
-
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/yappy-pago`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON}`
-      },
-      body: JSON.stringify({
-        total:    total.toFixed(2),
-        subtotal: subtotal.toFixed(2),
-        taxes:    impuesto.toFixed(2),
-        orderId:  String(pedidoActual.id),
-        mesa:     mesaNum
-      })
-    });
-
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-
-    // Redirigir directamente a la app de Yappy
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error('No se recibió URL de pago');
-    }
-
-  } catch(e) {
-    alert('Error Yappy: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<span>💚</span> Pagar con Yappy';
-  }
-}
-
-
 async function recargar() {
   document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
   setStatus('•••', 'status-loading');
