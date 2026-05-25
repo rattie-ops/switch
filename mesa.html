@@ -639,7 +639,8 @@ async function procesarPagoYappy() {
       body: JSON.stringify({ merchantId: d.merchantId, urlDomain: d.urlDomain })
     });
     const authData = await authResp.json();
-    if (!authResp.ok || authData.status !== '0000') throw new Error('Error validando comercio: ' + (authData.body?.description || authData.status));
+    console.log('Yappy auth response:', JSON.stringify(authData));
+    if (!authResp.ok || authData.status?.code !== '0000') throw new Error('Auth: ' + JSON.stringify(authData));
     const token = authData.body.token;
 
     // Paso 2: Crear orden
@@ -660,7 +661,8 @@ async function procesarPagoYappy() {
       })
     });
     const orderData = await orderResp.json();
-    if (!orderResp.ok || orderData.status !== '0000') throw new Error('Error creando orden: ' + (orderData.body?.description || orderData.status));
+    console.log('Yappy order response:', JSON.stringify(orderData));
+    if (!orderResp.ok || orderData.status?.code !== '0000') throw new Error('Orden: ' + JSON.stringify(orderData));
 
     closeModal();
     mostrarExito('¡Solicitud enviada!', 'Revisa tu app Yappy y aprueba el pago.');
