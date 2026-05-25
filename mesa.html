@@ -491,9 +491,7 @@ function renderPedido(pedido, detalle) {
     </div>
 
       <div class="actions">
-        <button class="btn-pay btn-yappy" onclick="abrirModalYappy()">
-          <span>💚</span> Pagar con Yappy
-        </button>
+        <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center; min-height:50px;"></div>
         <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
           <span>🏪</span> Pagar en caja
         </button>
@@ -501,7 +499,6 @@ function renderPedido(pedido, detalle) {
       <div style="text-align:center;">
         <button class="refresh-btn" onclick="recargar()">↻ Actualizar pedido</button>
       </div>
-      <div id="yappy-btn-wrap" style="display:none;"></div>
     `;
   window._yappyData = {
     merchantId: '7d9be35b-2c61-4afb-a3be-afe549b1de5f',
@@ -513,6 +510,31 @@ function renderPedido(pedido, detalle) {
     mesa:       mesaNum,
     totalFmt:   fmtMoney(total)
   };
+
+  // Inyectar botón oficial de Yappy
+  const yappyWrap = document.getElementById('yappy-btn-wrap');
+  if (yappyWrap) {
+    yappyWrap.innerHTML = '';
+    const btnYappy = document.createElement('btn-yappy');
+    btnYappy.setAttribute('merchant-id', '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
+    btnYappy.setAttribute('url-domain',  'https://mesas.mambabydiana.com');
+    btnYappy.setAttribute('order-id',    String(pedido.id));
+    btnYappy.setAttribute('total',       total.toFixed(2));
+    btnYappy.setAttribute('subtotal',    (total - impuesto).toFixed(2));
+    btnYappy.setAttribute('taxes',       impuesto.toFixed(2));
+    btnYappy.setAttribute('shipping',    '0.00');
+    btnYappy.setAttribute('discount',    '0.00');
+    btnYappy.setAttribute('success-url', `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok`);
+    btnYappy.setAttribute('fail-url',    `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail`);
+    btnYappy.setAttribute('color',       'brand');
+    btnYappy.style.width = '100%';
+    btnYappy.addEventListener('eventClick', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      abrirModalYappy();
+    });
+    yappyWrap.appendChild(btnYappy);
+  }
 }
 
 function mostrarVacio(titulo, sub) {
