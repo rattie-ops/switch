@@ -2,27 +2,27 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Switch Connect</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mi pedido</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f4f5f7;
+    --bg: #f7f5f2;
     --surface: #ffffff;
-    --surface2: #f0f1f3;
-    --border: #e0e2e8;
-    --accent: #E8411A;
-    --accent2: #1DA760;
-    --accent3: #E8411A;
-    --accent4: #F5A623;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --dim: #c0c4cc;
+    --surface2: #f0ede8;
+    --border: #e2ddd6;
+    --accent: #2d5a27;
+    --green: #2d5a27;
+    --yellow: #c8973a;
+    --red: #b94040;
+    --text: #1c1c1c;
+    --muted: #6b6560;
+    --dim: #c0b9b0;
     --font: Inter, system-ui, -apple-system, sans-serif;
     --mono: ui-monospace, "SF Mono", Consolas, monospace;
-    --radius: 10px;
+    --radius: 12px;
   }
 
   body {
@@ -30,1512 +30,398 @@
     color: var(--text);
     font-family: var(--font);
     min-height: 100vh;
-    font-size: 14px;
+    font-size: 15px;
   }
 
-  /* LOGIN */
-  #login-screen {
-    min-height: 100vh;
+  .header {
+    background: var(--surface);
+    border-bottom: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: var(--bg);
-  }
-
-  .login-box {
-    width: 400px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2.5rem;
-  }
-
-  .login-logo {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    margin-bottom: 0.3rem;
-    color: var(--text);
-  }
-
-  .login-logo span { }color: #E8411A;} }
-
-  .login-sub {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 2rem;
-  }
-
-  .field { margin-bottom: 1rem; }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .field input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .field input:focus { border-}color: #E8411A;} }
-
-  .field input::placeholder { color: var(--dim); }
-
-  .field-url input { font-family: var(--mono); font-size: 12px; }
-
-  .btn-login {
-    width: 100%;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius);
-    padding: 11px;
-    color: #fff;
-    font-family: var(--font);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    margin-top: 0.5rem;
-  }
-
-  .btn-login:hover { opacity: 0.85; }
-  .btn-login:active { transform: scale(0.98); }
-  .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .login-error {
-    background: #fdecea;
-    border: 1px solid #f5c6bc;
-    color: #c0392b;
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    font-size: 13px;
-    margin-top: 1rem;
-    display: none;
-  }
-
-  /* APP SHELL */
-  #app { display: none; flex-direction: column; min-height: 100vh; }
-
-  .topbar { border-top: 3px solid #E8411A;
-    height: 56px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 1.5rem;
-    gap: 1rem;
+    justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 10;
   }
 
-  .topbar-logo {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-  }
+  .header-left { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+  .header-brand { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+  .header-mesa { font-size: 20px; font-weight: 700; color: var(--text); }
+  .header-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+  .status-activo   { background: #e6f7ef; color: #0e6e3a; }
+  .status-vacio    { background: #fff8e6; color: #b87a00; }
+  .status-loading  { background: #f0f1f3; color: var(--muted); }
 
-  .topbar-logo span { }color: #E8411A;} }
+  .main { padding: 1.25rem; max-width: 520px; margin: 0 auto; }
 
-  .topbar-url {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
-    max-width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  .pedido-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem; }
+  .pedido-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .pedido-num { font-size: 13px; font-weight: 600; color: var(--text); }
+  .pedido-fecha { font-size: 12px; color: var(--muted); }
 
-  .topbar-spacer { flex: 1; }
+  .line-item { display: flex; align-items: center; padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border); gap: 1rem; }
+  .line-item:last-child { border-bottom: none; }
+  .line-qty { min-width: 36px; height: 36px; background: var(--surface2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+  .line-desc { flex: 1; }
+  .line-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .line-code { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
+  .line-price { font-size: 14px; font-weight: 600; color: var(--text); font-family: var(--mono); white-space: nowrap; }
 
-  .btn-logout {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-family: var(--font);
-    font-size: 12px;
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
+  .totals { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .total-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 14px; color: var(--muted); }
+  .total-row.grand { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 10px; font-size: 18px; font-weight: 700; color: var(--text); }
+  .total-row.grand span:last-child { color: var(--accent); }
 
-  .btn-logout:hover { border-color: #c0392b; color: #c0392b; }
+  .actions { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
 
-  /* NAV TABS */
-  .nav-tabs {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    padding: 0 1.5rem;
-    gap: 0.25rem;
-  }
+  .btn-pay { width: 100%; padding: 15px; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-pay:active { transform: scale(0.98); }
+  .btn-pay:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-yappy { background: #00C244; color: #fff; }
+  .btn-switchpay { background: var(--accent); color: #fff; letter-spacing: 0.3px; }
+  .btn-mesero { background: var(--surface); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-mesero:hover { border-color: var(--accent); }
 
-  .nav-tab {
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-    white-space: nowrap;
-  }
+  .state-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem 1.5rem; text-align: center; color: var(--muted); }
+  .state-icon { font-size: 40px; margin-bottom: 0.75rem; }
+  .state-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+  .state-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
-  .nav-tab:hover { color: var(--text); }
-  .nav-tab.active { }color: #E8411A;} border-bottom-}color: #E8411A;} }
-
-  /* MAIN */
-  .main { flex: 1; padding: 1.5rem; max-width: 1300px; width: 100%; margin: 0 auto; }
-
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* CARDS GRID */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 0.6rem;
-  }
-
-  .stat-value {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--text);
-    font-family: var(--mono);
-    letter-spacing: -1px;
-  }
-
-  .stat-value.accent { color: var(--accent2); }
-  .stat-value.warn { color: var(--accent4); }
-
-  .stat-sub {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* SECTION HEADER */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .section-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-
-  .ctrl-input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 12px;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .ctrl-input:focus { border-}color: #E8411A;} }
-  .ctrl-input::placeholder { color: var(--dim); }
-
-  .btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 14px;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    white-space: nowrap;
-  }
-
-  .btn:hover { border-}color: #E8411A;} background: var(--surface); }
-  .btn:active { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn.primary { background: var(--accent); border-}color: #E8411A;} color: #fff; }
-  .btn.primary:hover { opacity: 0.85; }
-
-  /* TABLE */
-  .table-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead th {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--surface2); }
-
-  tbody td {
-    padding: 10px 14px;
-    font-size: 13px;
-    color: var(--text);
-  }
-
-  .mono { font-family: var(--mono); font-size: 12px; }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-
-  .badge-green { background: #e6f7ef; color: var(--accent2); border: 1px solid #a3d9bc; }
-  .badge-red { background: #fdecea; color: #c0392b; border: 1px solid #f5c6bc; }
-  .badge-yellow { background: #fff8e6; color: var(--accent4); border: 1px solid #f5dfa3; }
-  .badge-purple { background: #fdf0ec; color: #E8411A; border: 1px solid #f5c4b3; }
-
-  /* PAGINATION */
-  .pagination {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .page-btns { display: flex; gap: 6px; }
-
-  .page-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 12px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .page-btn:hover { border-}color: #E8411A;} }
-  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-  /* LOADING / EMPTY */
-  .state-box {
-    padding: 3rem 1rem;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .spinner {
-    width: 24px; height: 24px;
-    border: 2px solid var(--dim);
-    border-top-color: #E8411A;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 0.75rem;
-  }
-
+  .spinner { width: 28px; height: 28px; border: 3px solid var(--dim); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* VENTAS PERIOD TABS */
-  .period-tabs {
-    display: flex;
-    gap: 0.5rem;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 4px;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: flex; align-items: flex-end; justify-content: center; padding: 1rem; }
+  .modal { background: var(--surface); border-radius: 16px 16px 12px 12px; width: 100%; max-width: 480px; padding: 1.5rem; }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.5; }
+  .modal-btns { display: flex; flex-direction: column; gap: 0.5rem; }
 
-  .period-tab {
-    padding: 5px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
+  .success-banner { background: #e6f7ef; border: 1px solid #a3d9bc; border-radius: var(--radius); padding: 1.25rem; text-align: center; margin-bottom: 1rem; }
+  .success-icon { font-size: 36px; margin-bottom: 0.5rem; }
+  .success-title { font-size: 16px; font-weight: 700; color: #0e6e3a; margin-bottom: 0.25rem; }
+  .success-sub { font-size: 13px; color: #1DA760; }
 
-  .period-tab.active {
-    background: var(--accent);
-    color: #fff;
-  }
+  .refresh-btn { background: none; border: none; color: var(--accent); font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; padding: 4px 0; text-decoration: underline; }
 
-  /* PEDIDO IA */
-  .pedido-steps { display: flex; flex-direction: column; gap: 1.25rem; }
-
-  .pedido-step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-  }
-
-  .step-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 0.25rem;
-  }
-
-  .search-item {
-    padding: 9px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-    color: var(--text);
-  }
-
-  .search-item:last-child { border-bottom: none; }
-  .search-item:hover { background: var(--surface2); }
-  .search-item small { color: var(--muted); font-size: 11px; margin-left: 6px; }
-
-  .chat-bubble {
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.6;
-    max-width: 85%;
-  }
-
-  .chat-user {
-    align-self: flex-end;
-    background: var(--accent);
-    color: #fff;
-    border-bottom-right-radius: 3px;
-  }
-
-  .chat-ai {
-    align-self: flex-start;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-bottom-left-radius: 3px;
-  }
-
-  .chat-thinking {
-    align-self: flex-start;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    border-bottom-left-radius: 3px;
-  }
-
-  .dot-pulse { display:flex; gap:4px; }
-  .dot-pulse span {
-    width:6px; height:6px; border-radius:50%; background:var(--muted);
-    animation: pulse 1.2s infinite;
-  }
-  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
-  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse { 0%,80%,100%{opacity:0.3} 40%{opacity:1} }
-
-  .linea-pedido {
-    display: grid;
-    grid-template-columns: 1fr auto auto auto;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-  .linea-pedido:last-child { border-bottom: none; }
-
-  .linea-desc { color: var(--text); }
-  .linea-cant input {
-    width: 60px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 8px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 13px;
-    text-align: center;
-    outline: none;
-  }
-  .linea-precio { font-family: var(--mono); font-size: 13px; color: var(--accent4); white-space:nowrap; }
-  .linea-del {
-    background: none; border: none; color: var(--muted); cursor: pointer;
-    font-size: 16px; padding: 0 4px; transition: color 0.15s;
-  }
-  .linea-del:hover { color: #c0392b; }
-
-  /* SUGGESTION PICKER */
-  .sug-list {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 6px;
-    background: var(--surface);
-  }
-
-  .sugerencia-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 14px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-    gap: 12px;
-  }
-
-  .sugerencia-item:last-child { border-bottom: none; }
-  .sugerencia-item:hover { background: var(--surface2); }
-
-  .sug-desc {
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .sug-meta {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: var(--mono);
-    white-space: nowrap;
-  }
-
-  /* TOAST */
-  #toast {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 18px;
-    font-size: 13px;
-    color: var(--text);
-    z-index: 999;
-    display: none;
-    max-width: 320px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  }
+  /* Campo teléfono Yappy */
+  .tel-wrap { display: flex; align-items: center; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .tel-prefix { padding: 12px 14px; font-size: 15px; color: var(--muted); border-right: 1px solid var(--border); white-space: nowrap; }
+  .tel-input { flex: 1; background: none; border: none; padding: 12px 14px; font-size: 16px; font-family: var(--font); color: var(--text); outline: none; }
+  .total-preview { background: var(--surface2); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; font-size: 14px; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Switch <span>Connect</span></div>
-    <div class="login-sub">Conecta con tu instancia de Switch ERP</div>
+<div class="header">
+  <div class="header-left">
+    <img src="https://d2j6dbq0eux0bg.cloudfront.net/images/39799274/1841556878.jpg" alt="Mamba by Diana" style="height:38px; width:auto; border-radius:6px; object-fit:cover;" />
+    <div class="header-mesa" id="header-mesa">Cargando...</div>
+  </div>
+  <div class="header-status status-loading" id="header-status">•••</div>
+</div>
 
-    <div class="field field-url">
-      <label>URL del servidor</label>
-      <input type="text" id="inp-url" placeholder="https://agrochef.switch-soft.com" value="https://agrochef.switch-soft.com" />
-    </div>
-    <div class="field">
-      <label>Usuario</label>
-      <input type="text" id="inp-user" placeholder="usuario" />
-    </div>
-    <div class="field">
-      <label>Contraseña</label>
-      <input type="password" id="inp-pass" placeholder="••••••••" />
-    </div>
-    <button class="btn-login" id="btn-login" onclick="doLogin()">Ingresar</button>
-    <div class="login-error" id="login-error"></div>
+<div class="main" id="main">
+  <div class="state-box">
+    <div class="spinner"></div>
+    <div class="state-title">Buscando tu pedido...</div>
   </div>
 </div>
 
-<!-- APP -->
-<div id="app">
-  <div class="topbar">
-    <div class="topbar-logo">Switch Connect</div>
-    <div class="topbar-url" id="topbar-url"></div>
-    <div class="topbar-spacer"></div>
-    <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
-  </div>
-
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="showTab('ventas', this)">📊 Ventas</div>
-    <div class="nav-tab" onclick="showTab('clientes', this)">👥 Clientes</div>
-    <div class="nav-tab" onclick="showTab('articulos', this)">📦 Artículos</div>
-    <div class="nav-tab" onclick="showTab('facturas', this)">🧾 Facturas</div>
-    <div class="nav-tab" onclick="showTab('pedido', this)">✨ Nuevo pedido</div>
-  </div>
-
-  <div class="main">
-
-    <!-- VENTAS -->
-    <div class="section active" id="sec-ventas">
-      <div class="section-header">
-        <div class="section-title">Resumen de ventas</div>
-        <div class="period-tabs">
-          <div class="period-tab active" onclick="loadVentas('01', this)">Hoy</div>
-          <div class="period-tab" onclick="loadVentas('02', this)">Ayer</div>
-          <div class="period-tab" onclick="loadVentas('03', this)">Este mes</div>
-          <div class="period-tab" onclick="loadVentas('04', this)">Este año</div>
-        </div>
-      </div>
-      <div class="cards-grid" id="ventas-cards">
-        <div class="state-box"><div class="spinner"></div>Cargando...</div>
-      </div>
-
-      <div class="section-header" style="margin-top:1.5rem;">
-        <div class="section-title">Diario de ventas</div>
-        <div class="controls">
-          <input type="date" class="ctrl-input" id="diario-desde" />
-          <input type="date" class="ctrl-input" id="diario-hasta" />
-          <button class="btn primary" onclick="loadDiario()">Consultar</button>
-        </div>
-      </div>
-      <div id="diario-result"></div>
-    </div>
-
-    <!-- CLIENTES -->
-    <div class="section" id="sec-clientes">
-      <div class="section-header">
-        <div class="section-title">Clientes</div>
-        <div class="controls">
-          <input type="text" class="ctrl-input" id="cli-filtro" placeholder="Buscar cliente..." style="width:200px" />
-          <button class="btn primary" onclick="loadClientes(1)">Buscar</button>
-        </div>
-      </div>
-      <div id="clientes-result"><div class="state-box"><div class="spinner"></div>Cargando...</div></div>
-    </div>
-
-    <!-- ARTICULOS -->
-    <div class="section" id="sec-articulos">
-      <div class="section-header">
-        <div class="section-title">Artículos</div>
-        <div class="controls">
-          <input type="text" class="ctrl-input" id="art-filtro" placeholder="Buscar artículo..." style="width:200px" />
-          <select class="ctrl-input" id="art-estatus">
-            <option value="">Todos</option>
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-          </select>
-          <button class="btn primary" onclick="loadArticulos(1)">Buscar</button>
-        </div>
-      </div>
-      <div id="articulos-result"><div class="state-box"><div class="spinner"></div>Cargando...</div></div>
-    </div>
-
-    <!-- FACTURAS -->
-    <div class="section" id="sec-facturas">
-      <div class="section-header">
-        <div class="section-title">Facturas y tiquetes</div>
-        <div class="controls">
-          <input type="date" class="ctrl-input" id="fac-desde" />
-          <input type="date" class="ctrl-input" id="fac-hasta" />
-          <input type="text" class="ctrl-input" id="fac-filtro" placeholder="Buscar..." style="width:160px" />
-          <button class="btn primary" onclick="loadFacturas(1)">Buscar</button>
-        </div>
-      </div>
-      <div id="facturas-result"><div class="state-box"><div class="spinner"></div>Cargando...</div></div>
-    </div>
-
-    <!-- PEDIDO IA -->
-    <div class="section" id="sec-pedido">
-      <div class="section-header">
-        <div class="section-title">✨ Nuevo pedido con IA</div>
-      </div>
-      <div class="pedido-steps">
-        <div class="pedido-step" id="step-config">
-          <div class="step-label">Paso 1 — Cliente y vendedor</div>
-          <div class="controls" style="flex-wrap:wrap; gap:0.75rem; margin-top:0.75rem; align-items:flex-start;">
-            <div style="display:flex; flex-direction:column; gap:4px; position:relative;">
-              <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Cliente</span>
-              <div style="display:flex;gap:0.5rem">
-                <input type="text" class="ctrl-input" id="ped-cli-buscar" placeholder="Buscar cliente..." style="width:200px" onkeydown="if(event.key==='Enter')buscarCliente()" />
-                <button class="btn" onclick="buscarCliente()">Buscar</button>
-              </div>
-              <div id="ped-cli-result" style="display:none; position:absolute; top:62px; left:0; z-index:50; background:var(--surface); border:1px solid var(--border); border-radius:8px; max-height:180px; overflow-y:auto; width:320px; box-shadow:0 4px 20px rgba(0,0,0,0.4);"></div>
-              <div id="ped-cli-sel" style="font-size:12px; color:var(--accent2); padding:2px 0; min-height:18px;"></div>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:4px; position:relative;">
-              <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Vendedor</span>
-              <div style="display:flex;gap:0.5rem">
-                <input type="text" class="ctrl-input" id="ped-vend-buscar" placeholder="Buscar vendedor..." style="width:200px" onkeydown="if(event.key==='Enter')buscarVendedor()" />
-                <button class="btn" onclick="buscarVendedor()">Buscar</button>
-              </div>
-              <div id="ped-vend-result" style="display:none; position:absolute; top:62px; left:0; z-index:50; background:var(--surface); border:1px solid var(--border); border-radius:8px; max-height:180px; overflow-y:auto; width:320px; box-shadow:0 4px 20px rgba(0,0,0,0.4);"></div>
-              <div id="ped-vend-sel" style="font-size:12px; color:var(--accent2); padding:2px 0; min-height:18px;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pedido-step" id="step-chat">
-          <div class="step-label">Paso 2 — Pega o escribe los productos del pedido</div>
-          <div id="chat-messages" style="margin-top:1rem; display:flex; flex-direction:column; gap:0.75rem; min-height:60px;"></div>
-          <div style="display:flex; gap:0.5rem; margin-top:1rem; align-items:flex-end;">
-            <textarea id="ped-msg" class="ctrl-input" placeholder="Pega aquí tu lista de productos con cantidades..." style="flex:1; min-height:140px; resize:vertical; line-height:1.6; padding:10px 14px;" onkeydown="if(event.key==='Enter'&&event.ctrlKey)enviarMensajePedido()"></textarea>
-            <button class="btn primary" id="btn-send-msg" onclick="enviarMensajePedido()" style="align-self:flex-end; padding:10px 18px;">Enviar ↗</button>
-          </div>
-          <div style="font-size:11px; color:var(--muted); margin-top:6px;">Ctrl + Enter para enviar</div>
-        </div>
-
-        <div class="pedido-step" id="step-review" style="display:none;">
-          <div class="step-label">Paso 3 — Revisar y confirmar</div>
-          <div id="pedido-preview" style="margin-top:0.75rem;"></div>
-          <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
-            <button class="btn" onclick="resetPedido()">← Editar</button>
-            <button class="btn primary" id="btn-confirmar" onclick="confirmarPedido()">✓ Confirmar pedido</button>
-          </div>
-          <div id="pedido-result" style="margin-top:1rem;"></div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
-</div><!-- /app -->
-
-<div id="toast"></div>
-
 <script>
-let BASE_URL = '';
-let TOKEN = '';
-let SUCURSAL_ID = '';
+const API_URL      = 'https://mambabydiana.switch-soft.com';
+const API_USER     = 'admin';
+const API_PASS     = 'Mamba2020';
+const SUPABASE_URL = 'https://epzwpxuueucvkuexqpok.supabase.co';
 
-function fmtMoney(v) {
-  const n = parseFloat(v);
-  if (isNaN(n)) return '—';
-  return '$' + n.toLocaleString('es-PA', {minimumFractionDigits:2, maximumFractionDigits:2});
+const params     = new URLSearchParams(location.search);
+const mesaNum    = params.get('mesa') || '1';
+const mesaCodigo = mesaNum.padStart(3, '0');
+
+let TOKEN        = null;
+let pedidoActual = null;
+
+document.getElementById('header-mesa').textContent = 'Mesa ' + mesaNum;
+document.title = 'Mesa ' + mesaNum + ' — Mi pedido';
+
+// Detectar retorno de pago Yappy
+if (params.get('pago') === 'ok') {
+  setTimeout(() => mostrarExito('¡Pago completado!', 'Tu pago con Yappy fue procesado exitosamente. ¡Gracias!'), 500);
+} else if (params.get('pago') === 'fail') {
+  setTimeout(() => {
+    setStatus('Error', 'status-vacio');
+    mostrarError('El pago no fue completado. Intenta de nuevo o paga en caja.');
+  }, 500);
 }
 
-function today() {
-  return new Date().toISOString().slice(0,10);
+// ── AUTENTICACIÓN ─────────────────────────────────────────────
+async function obtenerToken() {
+  const fd = new FormData();
+  fd.append('usuario', API_USER);
+  fd.append('password', API_PASS);
+  const r = await fetch(API_URL + '/autenticacion', { method: 'POST', body: fd });
+  const data = await r.json();
+  if (data.error) throw new Error('Auth: ' + data.error.message);
+  TOKEN = data.data.token;
 }
 
-function daysAgo(n) {
-  const d = new Date(); d.setDate(d.getDate() - n);
-  return d.toISOString().slice(0,10);
+async function init() {
+  try {
+    await obtenerToken();
+    await cargarPedido();
+  } catch(e) {
+    mostrarError(e.message);
+  }
 }
 
-function showToast(msg, duration=3000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  clearTimeout(t._t);
-  t._t = setTimeout(() => t.style.display = 'none', duration);
-}
+init();
 
+// ── API GET ───────────────────────────────────────────────────
 async function apiGet(path) {
-  const r = await fetch(BASE_URL + path, {
-    headers: { 'Authorization': TOKEN, 'Content-Type': 'application/json' }
-  });
+  const r = await fetch(API_URL + path, { headers: { 'Authorization': TOKEN } });
   const data = await r.json();
   if (data.error) {
-    if (data.error.code == '0005' && data.new_token) TOKEN = data.new_token;
-    throw new Error(data.error.message || 'Error');
+    if (data.error.code == '0005' && data.new_token) { TOKEN = data.new_token; return apiGet(path); }
+    if (data.error.code == '0006') { await obtenerToken(); return apiGet(path); }
+    throw new Error(data.error.message);
   }
   return data.data;
 }
 
-async function doLogin() {
-  const url = document.getElementById('inp-url').value.trim().replace(/\/$/, '');
-  const user = document.getElementById('inp-user').value.trim();
-  const pass = document.getElementById('inp-pass').value;
-  const errEl = document.getElementById('login-error');
-  const btn = document.getElementById('btn-login');
-
-  if (!url || !user || !pass) {
-    errEl.textContent = 'Por favor completa todos los campos.';
-    errEl.style.display = 'block'; return;
-  }
-
-  btn.disabled = true; btn.textContent = 'Ingresando...';
-  errEl.style.display = 'none';
-
-  try {
-    BASE_URL = url;
-    const fd = new FormData();
-    fd.append('usuario', user); fd.append('password', pass);
-    const r = await fetch(BASE_URL + '/autenticacion', { method: 'POST', body: fd });
-    const data = await r.json();
-    if (data.error) throw new Error(data.error.message || 'Credenciales inválidas');
-
-    TOKEN = data.data.token;
-    SUCURSAL_ID = data.data.sucursalId;
-
-    document.getElementById('topbar-url').textContent = url;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-
-    initDates();
-    loadVentas('01', document.querySelector('.period-tab'));
-    loadClientes(1);
-    loadArticulos(1);
-    loadFacturas(1);
-
-  } catch(e) {
-    errEl.textContent = e.message;
-    errEl.style.display = 'block';
-    BASE_URL = ''; TOKEN = '';
-  } finally {
-    btn.disabled = false; btn.textContent = 'Ingresar';
-  }
+function fmtMoney(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return '$' + n.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function initDates() {
-  document.getElementById('diario-desde').value = daysAgo(7);
-  document.getElementById('diario-hasta').value = today();
-  document.getElementById('fac-desde').value = daysAgo(30);
-  document.getElementById('fac-hasta').value = today();
-}
+// ── MAPA MESAS ────────────────────────────────────────────────
+const MESA_IDS = { '1':105, '2':2062, '3':2063, '4':2079, '5':2080, '6':2081, '7':2082 };
 
-async function doLogout() {
-  try { await fetch(BASE_URL + '/cierresesion', { method: 'POST', headers: { Authorization: TOKEN } }); } catch(e) {}
-  TOKEN = ''; BASE_URL = '';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-}
+// ── BUSCAR PEDIDO ─────────────────────────────────────────────
+async function cargarPedido() {
+  const clienteId = MESA_IDS[mesaNum];
+  if (!clienteId) { mostrarVacio('Mesa no configurada', 'La mesa ' + mesaNum + ' no está configurada.'); return; }
 
-function showTab(name, el) {
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('sec-' + name).classList.add('active');
-}
+  const dp = await apiGet('/apipedido/lista?clienteId=' + clienteId + '&porPagina=5&paginaActual=1');
+  const pedidos = dp.pedidos || [];
 
-// ---- VENTAS ----
-async function loadVentas(tipo, el) {
-  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  const el2 = document.getElementById('ventas-cards');
-  el2.innerHTML = '<div class="state-box"><div class="spinner"></div>Cargando...</div>';
-  try {
-    const d = await apiGet('/apireporte/totalventas?tipo=' + tipo);
-    const venta = parseFloat(d.totalventa || 0);
-    const costo = parseFloat(d.totalcosto || 0);
-    const util = parseFloat(d.totalutilidad || 0);
-    const margin = venta > 0 ? ((util/venta)*100).toFixed(1) : '0.0';
-
-    let detHtml = '';
-    if (d.totales) {
-      const keys = Object.keys(d.totales);
-      const items = keys.map(k => d.totales[k]);
-      if (items.length > 0) {
-        detHtml = `
-        <div style="margin-top:1rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;">
-          <table><thead><tr>
-            <th>${tipo==='04'?'Mes':'Día'}</th>
-            <th>Venta</th><th>Costo</th><th>Utilidad</th>
-          </tr></thead><tbody>
-          ${items.map(i => `<tr>
-            <td class="mono">${i.etiqueta || i.fecha || ''}</td>
-            <td>${fmtMoney(i.total)}</td>
-            <td>${fmtMoney(i.costo)}</td>
-            <td style="color:var(--accent2)">${fmtMoney(i.utilidad)}</td>
-          </tr>`).join('')}
-          </tbody></table>
-        </div>`;
-      }
-    }
-
-    el2.innerHTML = `
-      <div class="stat-card"><div class="stat-label">Ventas totales</div><div class="stat-value">${fmtMoney(venta)}</div></div>
-      <div class="stat-card"><div class="stat-label">Costo total</div><div class="stat-value warn">${fmtMoney(costo)}</div></div>
-      <div class="stat-card"><div class="stat-label">Utilidad</div><div class="stat-value accent">${fmtMoney(util)}</div></div>
-      <div class="stat-card"><div class="stat-label">Margen</div><div class="stat-value" style="color:var(--accent4)">${margin}%</div></div>
-      ${detHtml}`;
-  } catch(e) {
-    el2.innerHTML = `<div class="state-box">⚠ ${e.message}</div>`;
-  }
-}
-
-async function loadDiario() {
-  const desde = document.getElementById('diario-desde').value;
-  const hasta = document.getElementById('diario-hasta').value;
-  if (!desde || !hasta) { showToast('Selecciona las fechas'); return; }
-  const el = document.getElementById('diario-result');
-  el.innerHTML = '<div class="state-box"><div class="spinner"></div>Cargando...</div>';
-  try {
-    const d = await apiGet(`/apireporte/diarioventas?sucursalId=${SUCURSAL_ID}&desde=${desde}&hasta=${hasta}`);
-    const dv = d.diarioDeVentas;
-    const fp = (dv.formasDePago || []).map(f =>
-      `<tr><td>${f.nombre}</td><td>${fmtMoney(f.total)}</td></tr>`).join('');
-
-    el.innerHTML = `
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1rem;">
-      <div class="stat-card"><div class="stat-label">Ventas emitidas</div><div class="stat-value">${dv.totalVentasEmitidas || 0}</div></div>
-      <div class="stat-card"><div class="stat-label">Total ventas</div><div class="stat-value accent">${fmtMoney(dv.totalVentas)}</div></div>
-      <div class="stat-card"><div class="stat-label">Notas de crédito</div><div class="stat-value warn">${fmtMoney(dv.totalNotasCredito)}</div></div>
-      <div class="stat-card"><div class="stat-label">Gran total</div><div class="stat-value">${fmtMoney(dv.granTotal)}</div></div>
-    </div>
-    <div class="table-wrap">
-      <table><thead><tr><th>Forma de pago</th><th>Total</th></tr></thead>
-      <tbody>${fp || '<tr><td colspan="2" style="color:var(--muted);text-align:center">Sin datos</td></tr>'}</tbody></table>
-    </div>`;
-  } catch(e) {
-    el.innerHTML = `<div class="state-box">⚠ ${e.message}</div>`;
-  }
-}
-
-// ---- CLIENTES ----
-let clPage = 1;
-async function loadClientes(page) {
-  clPage = page;
-  const filtro = document.getElementById('cli-filtro').value;
-  const el = document.getElementById('clientes-result');
-  el.innerHTML = '<div class="state-box"><div class="spinner"></div>Cargando...</div>';
-  try {
-    const d = await apiGet(`/apicliente/lista?porPagina=20&paginaActual=${page}${filtro?'&filtro='+encodeURIComponent(filtro):''}`);
-    const rows = (d.clientes||[]).map(c => `<tr>
-      <td class="mono">${c.codigo||'—'}</td>
-      <td>${c.nombre||'—'}</td>
-      <td>${c.razonsocial||'—'}</td>
-      <td><span class="badge badge-purple">${c.clienteImpuesto||'0'}%</span></td>
-    </tr>`).join('');
-    const pg = d.paginacion || {};
-    el.innerHTML = `
-    <div class="table-wrap">
-      <table><thead><tr><th>Código</th><th>Nombre</th><th>Razón social</th><th>Impuesto</th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="4" class="state-box">Sin resultados</td></tr>'}</tbody></table>
-      ${paginationHtml(pg, 'loadClientes')}
-    </div>`;
-  } catch(e) {
-    el.innerHTML = `<div class="state-box">⚠ ${e.message}</div>`;
-  }
-}
-
-// ---- ARTICULOS ----
-async function loadArticulos(page) {
-  const filtro = document.getElementById('art-filtro').value;
-  const estatus = document.getElementById('art-estatus').value;
-  const el = document.getElementById('articulos-result');
-  el.innerHTML = '<div class="state-box"><div class="spinner"></div>Cargando...</div>';
-  try {
-    let q = `/apiarticulos/lista?porPagina=20&paginaActual=${page}&sucursalId=${SUCURSAL_ID}`;
-    if (filtro) q += '&filtro=' + encodeURIComponent(filtro);
-    if (estatus) q += '&estatus=' + estatus;
-    const d = await apiGet(q);
-    const rows = (d.articulos||[]).map(a => `<tr>
-      <td class="mono">${a.codigo||'—'}</td>
-      <td>${a.descripcion||'—'}</td>
-      <td class="mono">${a.codigoBarra||'—'}</td>
-      <td>${fmtMoney(a.precio)}</td>
-      <td>${fmtMoney(a.costo)}</td>
-      <td><span class="badge ${parseFloat(a.disponible)>0?'badge-green':'badge-red'}">${parseFloat(a.disponible||0).toFixed(2)}</span></td>
-      <td style="color:var(--muted);font-size:12px">${a.unidadmedida||''}</td>
-    </tr>`).join('');
-    const pg = d.paginacion || {};
-    el.innerHTML = `
-    <div class="table-wrap">
-      <table><thead><tr><th>Código</th><th>Descripción</th><th>Código barra</th><th>Precio</th><th>Costo</th><th>Disponible</th><th>UM</th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="7" class="state-box">Sin resultados</td></tr>'}</tbody></table>
-      ${paginationHtml(pg, 'loadArticulos')}
-    </div>`;
-  } catch(e) {
-    el.innerHTML = `<div class="state-box">⚠ ${e.message}</div>`;
-  }
-}
-
-// ---- FACTURAS ----
-async function loadFacturas(page) {
-  const desde = document.getElementById('fac-desde').value;
-  const hasta = document.getElementById('fac-hasta').value;
-  const filtro = document.getElementById('fac-filtro').value;
-  const el = document.getElementById('facturas-result');
-  el.innerHTML = '<div class="state-box"><div class="spinner"></div>Cargando...</div>';
-  try {
-    let q = `/apifactura/lista?porPagina=20&paginaActual=${page}`;
-    if (desde) q += '&desde=' + desde;
-    if (hasta) q += '&hasta=' + hasta;
-    if (filtro) q += '&filtro=' + encodeURIComponent(filtro);
-    const d = await apiGet(q);
-    const rows = (d.facturas||[]).map(f => `<tr>
-      <td class="mono">${f.secuencial||'—'}</td>
-      <td>${f.fecha||'—'}</td>
-      <td>${f.cliente||'—'}</td>
-      <td>${f.vendedor||'—'}</td>
-      <td>${fmtMoney(f.total)}</td>
-      <td><span class="badge ${parseFloat(f.saldo||0)===0?'badge-green':'badge-yellow'}">${fmtMoney(f.saldo)}</span></td>
-      <td style="color:var(--muted);font-size:11px">${f.sucursal||''}</td>
-    </tr>`).join('');
-    const pg = d.paginacion || {};
-    el.innerHTML = `
-    <div class="table-wrap">
-      <table><thead><tr><th>N° Interno</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th><th>Total</th><th>Saldo</th><th>Sucursal</th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="7" class="state-box">Sin resultados</td></tr>'}</tbody></table>
-      ${paginationHtml(pg, 'loadFacturas')}
-    </div>`;
-  } catch(e) {
-    el.innerHTML = `<div class="state-box">⚠ ${e.message}</div>`;
-  }
-}
-
-function paginationHtml(pg, fn) {
-  if (!pg.total) return '';
-  const cur = parseInt(pg.paginaActual)||1;
-  const pp = parseInt(pg.porPagina)||20;
-  const total = parseInt(pg.total)||0;
-  const pages = Math.ceil(total / pp);
-  const start = (cur-1)*pp + 1;
-  const end = Math.min(cur*pp, total);
-  return `<div class="pagination">
-    <span>Mostrando ${start}–${end} de ${total}</span>
-    <div class="page-btns">
-      <button class="page-btn" ${cur<=1?'disabled':''} onclick="${fn}(${cur-1})">‹ Anterior</button>
-      <button class="page-btn" ${cur>=pages?'disabled':''} onclick="${fn}(${cur+1})">Siguiente ›</button>
-    </div>
-  </div>`;
-}
-
-// ---- PEDIDO IA ----
-let pedidoClienteId = null, pedidoClienteNombre = '';
-let pedidoVendedorId = null, pedidoVendedorNombre = '';
-let pedidoLineas = [];
-
-async function buscarCliente() {
-  const q = document.getElementById('ped-cli-buscar').value.trim();
-  if (!q) return;
-  const res = document.getElementById('ped-cli-result');
-  res.style.display = 'block';
-  res.innerHTML = '<div class="search-item" style="color:var(--muted)">Buscando...</div>';
-  try {
-    const d = await apiGet('/apicliente/lista?porPagina=8&paginaActual=1&filtro=' + encodeURIComponent(q));
-    const items = d.clientes || [];
-    if (!items.length) { res.innerHTML = '<div class="search-item" style="color:var(--muted)">Sin resultados</div>'; return; }
-    res.innerHTML = items.map(c => `<div class="search-item" onclick="selCliente(${c.id},'${(c.nombre||'').replace(/'/g,"\\'")}')">
-      ${c.nombre||'—'} <small>${c.codigo||''}</small>
-    </div>`).join('');
-  } catch(e) { res.innerHTML = `<div class="search-item" style="color:var(--accent3)">${e.message}</div>`; }
-}
-
-function selCliente(id, nombre) {
-  pedidoClienteId = id; pedidoClienteNombre = nombre;
-  document.getElementById('ped-cli-sel').textContent = '✓ ' + nombre;
-  document.getElementById('ped-cli-result').style.display = 'none';
-  document.getElementById('ped-cli-buscar').value = nombre;
-}
-
-async function buscarVendedor() {
-  const q = document.getElementById('ped-vend-buscar').value.trim();
-  if (!q) return;
-  const res = document.getElementById('ped-vend-result');
-  res.style.display = 'block';
-  res.innerHTML = '<div class="search-item" style="color:var(--muted)">Buscando...</div>';
-  try {
-    const d = await apiGet('/apivendedor/lista?porPagina=8&paginaActual=1&filtro=' + encodeURIComponent(q));
-    const items = d.vendedores || [];
-    if (!items.length) { res.innerHTML = '<div class="search-item" style="color:var(--muted)">Sin resultados</div>'; return; }
-    res.innerHTML = items.map(v => `<div class="search-item" onclick="selVendedor(${v.id},'${(v.nombre||'').replace(/'/g,"\\'")}')">
-      ${v.nombre||'—'}
-    </div>`).join('');
-  } catch(e) { res.innerHTML = `<div class="search-item" style="color:var(--accent3)">${e.message}</div>`; }
-}
-
-function selVendedor(id, nombre) {
-  pedidoVendedorId = id; pedidoVendedorNombre = nombre;
-  document.getElementById('ped-vend-sel').textContent = '✓ ' + nombre;
-  document.getElementById('ped-vend-result').style.display = 'none';
-  document.getElementById('ped-vend-buscar').value = nombre;
-}
-
-function addChatMsg(text, type) {
-  const box = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-bubble chat-' + type;
-  div.innerHTML = text;
-  box.appendChild(div);
-  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  return div;
-}
-
-function addThinking() {
-  const box = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-thinking';
-  div.innerHTML = 'Interpretando <div class="dot-pulse"><span></span><span></span><span></span></div>';
-  box.appendChild(div);
-  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  return div;
-}
-
-async function enviarMensajePedido() {
-  if (!pedidoClienteId) { showToast('Primero selecciona un cliente'); return; }
-  if (!pedidoVendedorId) { showToast('Primero selecciona un vendedor'); return; }
-  const inp = document.getElementById('ped-msg');
-  const msg = inp.value.trim();
-  if (!msg) return;
-  inp.value = '';
-  document.getElementById('btn-send-msg').disabled = true;
-  addChatMsg(msg, 'user');
-  const thinking = addThinking();
-
-  try {
-    const parsed = await interpretarPedidoConIA(msg);
-    thinking.remove();
-
-    if (!parsed || !parsed.length) {
-      addChatMsg('No pude identificar productos en tu mensaje. Intenta con algo como: <em>"2 Coca Cola, 5 agua"</em>', 'ai');
-      return;
-    }
-
-    addChatMsg(`Encontré <strong>${parsed.length} producto(s)</strong>. Buscando en Switch...`, 'ai');
-    const resultados = await resolverArticulos(parsed);
-
-    const noEncontrados = resultados.filter(r => !r.articulo);
-    const encontrados = resultados.filter(r => r.articulo);
-
-    encontrados.forEach((r, i) => {
-      const art = r.articulo;
-      const codigoBarraId = art.codigoBarraId ?? art.codigoBarraid ?? art.codigoBarra_id ?? art.id;
-      const descripcion   = art.descripcion   ?? art.Descripcion  ?? '—';
-      const codigo        = art.codigo        ?? art.Codigo       ?? '';
-      const precio        = parseFloat(art.precio ?? art.Precio   ?? 0) || 0;
-      const existe = pedidoLineas.findIndex(l => l.codigoBarraId != null && l.codigoBarraId == codigoBarraId);
-      if (existe >= 0) {
-        pedidoLineas[existe].cantidad += r.cantidad;
-      } else {
-        pedidoLineas.push({ codigoBarraId, descripcion, codigo, precio, cantidad: r.cantidad, descuento: 0 });
-      }
-    });
-
-    if (encontrados.length) {
-      addChatMsg(`✓ Agregados ${encontrados.length} producto(s) al pedido.`, 'ai');
-      mostrarBotonRevisar();
-      mostrarRevision();
-    }
-
-    // Para los no encontrados, buscar sugerencias y mostrar picker
-    if (noEncontrados.length) {
-      for (const item of noEncontrados) {
-        await mostrarSugerencias(item);
-      }
-    }
-
-  } catch(e) {
-    thinking.remove();
-    addChatMsg('Error al procesar: ' + e.message, 'ai');
-  } finally {
-    document.getElementById('btn-send-msg').disabled = false;
-  }
-}
-
-async function mostrarSugerencias(item) {
-  const box = document.getElementById('chat-messages');
-  const termino = item.terminoBuscado || item.termino;
-  const cantidad = item.cantidad;
-
-  // Buscar sugerencias usando el término original y la primera palabra
-  let sugerencias = [];
-  try {
-    const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(termino) + '&porPagina=6&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
-    sugerencias = d.articulos || [];
-  } catch(_) {}
-
-  if (!sugerencias.length) {
-    // Intenta con primera palabra
-    try {
-      const primera = termino.split(' ')[0];
-      const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(primera) + '&porPagina=6&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
-      sugerencias = d.articulos || [];
-    } catch(_) {}
-  }
-
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'align-self:flex-start; width:100%; max-width:480px;';
-
-  if (!sugerencias.length) {
-    wrapper.innerHTML = `
-      <div class="chat-bubble chat-ai">
-        ⚠ No encontré "<strong>${item.termino}</strong>" ni sugerencias similares en Switch.
-      </div>`;
-    box.appendChild(wrapper);
-    wrapper.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  if (!pedidos.length) {
+    setStatus('Sin pedido', 'status-vacio');
+    mostrarVacio('Sin pedido activo', 'No hay ningún pedido abierto para esta mesa.\nAcércate a la caja para realizar tu orden.');
     return;
   }
 
-  const opciones = sugerencias.map((a, i) => {
-    const cbId  = a.codigoBarraId ?? a.id;
-    const desc  = a.descripcion ?? '—';
-    const cod   = a.codigo ?? '';
-    const precio = parseFloat(a.precio ?? 0).toFixed(2);
-    return `<div class="sugerencia-item" onclick="agregarDesdeSugerencia('${cbId}','${desc.replace(/'/g,"\\'")}','${cod}',${precio},${cantidad},this.closest('.sugerencia-wrap'))">
-      <span class="sug-desc">${desc}</span>
-      <span class="sug-meta">${cod} · $${precio}</span>
-    </div>`;
-  }).join('');
-
-  wrapper.className = 'sugerencia-wrap';
-  wrapper.innerHTML = `
-    <div class="chat-bubble chat-ai" style="width:100%;max-width:100%;border-radius:10px 10px 3px 10px;">
-      ¿Cuál es "<strong>${item.termino}</strong>" (${cantidad} uds)? Elige una opción:
-    </div>
-    <div class="sug-list">${opciones}</div>
-    <button class="btn" style="margin-top:6px;font-size:11px;" onclick="this.closest('.sugerencia-wrap').remove()">Omitir</button>`;
-  box.appendChild(wrapper);
-  wrapper.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  const pedido = pedidos[0];
+  pedidoActual = pedido;
+  const dd = await apiGet('/apipedido/info?pedidoId=' + pedido.id);
+  renderPedido(pedido, dd);
 }
 
-function agregarDesdeSugerencia(codigoBarraId, descripcion, codigo, precio, cantidad, wrap) {
-  const existe = pedidoLineas.findIndex(l => l.codigoBarraId == codigoBarraId);
-  if (existe >= 0) {
-    pedidoLineas[existe].cantidad += cantidad;
-  } else {
-    pedidoLineas.push({ codigoBarraId, descripcion, codigo, precio: parseFloat(precio), cantidad, descuento: 0 });
-  }
-  wrap.innerHTML = `<div class="chat-bubble chat-ai">✓ Agregado: <strong>${descripcion}</strong> × ${cantidad}</div>`;
-  mostrarBotonRevisar();
-  mostrarRevision();
-}
+// ── RENDER ────────────────────────────────────────────────────
+function renderPedido(pedido, detalle) {
+  setStatus('Pedido activo', 'status-activo');
 
-function interpretarPedidoConIA(mensaje) {
-  const resultados = [];
+  const lineas    = detalle.detalle || [];
+  const descuento = parseFloat(pedido.descuento || 0);
+  const impuesto  = parseFloat(pedido.impuesto  || 0);
+  const total     = parseFloat(pedido.total     || 0);
 
-  // Unidades de medida — usadas para dividir el texto en productos
-  const reUnidad = /\b(unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?)\b/i;
-
-  // Palabras descriptivas/adjetivos a eliminar antes de buscar
-  const stopWords = /\b(no|muy|ni|fresco|fresca|grande|grandes|pequeño|pequeña|maduro|madura|golpeado|golpeada|rizado|rizada|entero|entera|limpio|limpia|nuevo|nueva|bueno|buena|bonito|bonita|especial|selecto|selecta|extra|premium|importado|nacional|orgánico|organico|natural)\b/gi;
-
-  // Calibres tipo "3x3", "2x2"
-  const reCalib = /\b\d+x\d+\b/gi;
-
-  // --- PASO 1: dividir el mensaje en líneas/segmentos ---
-  let segmentos = [];
-
-  // Si hay saltos de línea reales, usarlos
-  if (/\n/.test(mensaje)) {
-    segmentos = mensaje.split(/\n/).map(s => s.trim()).filter(s => s.length > 2);
-  } else {
-    // Texto corrido: dividir donde aparece "NÚMERO unidad" precedido de texto
-    // Estrategia: encontrar todos los patrones "cantidad unidad" y usarlos como separadores
-    // Ejemplo: "Tomate 3x3 ... 30 unidades  Brocoli ... 12 unidades"
-    // Dividir por: dígito(s) + espacio + unidad seguido de 2+ espacios o fin
-    const re = /(\d+[\.,]?\d*\s*(?:unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?))(?:\s{2,}|\s+(?=[A-ZÁÉÍÓÚÑ]))/gi;
-
-    let lastIndex = 0;
-    let match;
-    const text = mensaje;
-    const splits = [];
-
-    while ((match = re.exec(text)) !== null) {
-      splits.push(match.index + match[0].trimEnd().length);
-    }
-
-    if (splits.length > 0) {
-      let prev = 0;
-      for (const idx of splits) {
-        const seg = text.slice(prev, idx).trim();
-        if (seg.length > 2) segmentos.push(seg);
-        prev = idx;
-      }
-      const last = text.slice(prev).trim();
-      if (last.length > 2) segmentos.push(last);
-    }
-
-    // Si no se pudo dividir por unidades, intentar dividir por mayúscula precedida de espacios
-    if (segmentos.length <= 1) {
-      segmentos = mensaje
-        .split(/\s{2,}/)
-        .map(s => s.trim())
-        .filter(s => s.length > 2);
-    }
-
-    // Último recurso: tratar todo como un segmento
-    if (segmentos.length === 0) segmentos = [mensaje.trim()];
-  }
-
-  // --- PASO 2: parsear cada segmento ---
-  for (const seg of segmentos) {
-    if (!seg || seg.length < 2) continue;
-
-    let cantidad = 1;
-    let termino = seg;
-
-    // Buscar "NÚMERO unidad" en cualquier posición
-    const mUnidad = seg.match(/(\d+[\.,]?\d*)\s*(unidades?|unid?|mazos?|libras?|lbs?|kilos?|kg|gramos?|gr?|paquetes?|paq|cajas?|sacos?|bolsas?|docenas?|doc|litros?|lts?|ml|piezas?|pzas?)/i);
-    if (mUnidad) {
-      cantidad = parseFloat(mUnidad[1].replace(',', '.'));
-      termino = seg.replace(mUnidad[0], '').trim();
-    } else {
-      // Número suelto al final: "Blueberry 3"
-      const mFin = seg.match(/^(.+?)\s+(\d+[\.,]?\d*)$/);
-      if (mFin) { termino = mFin[1].trim(); cantidad = parseFloat(mFin[2]); }
-    }
-
-    // Limpiar término
-    let terminoLimpio = termino
-      .replace(stopWords, '')
-      .replace(reCalib, '')
-      .replace(/\s{2,}/g, ' ')
-      .replace(/^(de|del|un|una|y)\s+/i, '')
-      .trim();
-
-    if (terminoLimpio.length < 2) {
-      terminoLimpio = termino.split(/\s+/).slice(0, 2).join(' ');
-    }
-
-    // Máximo 3 palabras para la búsqueda
-    const terminoBusqueda = terminoLimpio
-      .split(/\s+/)
-      .filter(p => p.length > 1)
-      .slice(0, 3)
-      .join(' ');
-
-    if (terminoBusqueda && terminoBusqueda.length > 1) {
-      resultados.push({
-        termino: terminoBusqueda,
-        terminoOriginal: seg,
-        cantidad: isNaN(cantidad) || cantidad <= 0 ? 1 : cantidad
-      });
-    }
-  }
-
-  return Promise.resolve(resultados);
-}
-
-async function resolverArticulos(parsed) {
-  const resultados = [];
-  for (const item of parsed) {
-    try {
-      let art = null;
-
-      // Intento 1: /buscar — devuelve data.articulo (objeto)
-      try {
-        const d = await apiGet('/apiarticulos/buscar?buscar=' + encodeURIComponent(item.termino) + '&estatus=Activo');
-        const raw = d.articulo;
-        // a veces devuelve array, a veces objeto
-        art = Array.isArray(raw) ? (raw.length ? raw[0] : null) : (raw || null);
-      } catch(_) {}
-
-      // Intento 2: /lista — devuelve data.articulos (array)
-      if (!art) {
-        try {
-          const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(item.termino) + '&porPagina=3&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
-          const arr = d.articulos;
-          art = Array.isArray(arr) ? (arr.length ? arr[0] : null) : null;
-        } catch(_) {}
-      }
-
-      // Intento 3: primera palabra sola
-      if (!art) {
-        const primeraPalabra = item.termino.split(' ')[0];
-        if (primeraPalabra && primeraPalabra.length > 2) {
-          try {
-            const d = await apiGet('/apiarticulos/lista?filtro=' + encodeURIComponent(primeraPalabra) + '&porPagina=3&paginaActual=1&sucursalId=' + SUCURSAL_ID + '&estatus=Activo');
-            const arr = d.articulos;
-            art = Array.isArray(arr) ? (arr.length ? arr[0] : null) : null;
-          } catch(_) {}
-        }
-      }
-
-      // Validar que art sea un objeto real con al menos id o descripcion
-      if (art && typeof art !== 'object') art = null;
-      if (art && !art.id && !art.descripcion && !art.codigo) art = null;
-
-      console.log(`[SC] "${item.termino}" →`, art ? `✓ ${art.descripcion || art.codigo}` : '✗ no encontrado');
-
-      resultados.push({
-        termino: item.terminoOriginal || item.termino,
-        terminoBuscado: item.termino,
-        cantidad: parseFloat(item.cantidad) || 1,
-        articulo: art
-      });
-    } catch(e) {
-      console.warn(`[SC] Error buscando "${item.termino}":`, e.message);
-      resultados.push({
-        termino: item.terminoOriginal || item.termino,
-        terminoBuscado: item.termino,
-        cantidad: parseFloat(item.cantidad) || 1,
-        articulo: null
-      });
-    }
-  }
-  return resultados;
-}
-
-function mostrarBotonRevisar() {
-  const box = document.getElementById('chat-messages');
-  const existing = box.querySelector('.btn-revisar');
-  if (existing) existing.remove();
-  const btn = document.createElement('button');
-  btn.className = 'btn primary btn-revisar';
-  btn.style.alignSelf = 'flex-start';
-  btn.textContent = '→ Revisar pedido (' + pedidoLineas.length + ' productos)';
-  btn.onclick = mostrarRevision;
-  box.appendChild(btn);
-  btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function mostrarRevision() {
-  document.getElementById('step-review').style.display = 'block';
-  renderPreview();
-  document.getElementById('step-review').scrollIntoView({ behavior: 'smooth' });
-}
-
-function renderPreview() {
-  const el = document.getElementById('pedido-preview');
-  if (!pedidoLineas.length) { el.innerHTML = '<div class="state-box">No hay líneas en el pedido</div>'; return; }
-
-  let total = 0;
-  const rows = pedidoLineas.map((l, i) => {
-    const sub = l.precio * l.cantidad * (1 - l.descuento/100);
-    total += sub;
-    return `<div class="linea-pedido">
-      <div class="linea-desc">
-        <div style="font-weight:500">${l.descripcion}</div>
-        <div style="font-size:11px;color:var(--muted)">${l.codigo} · ${fmtMoney(l.precio)} c/u</div>
+  const itemsHtml = lineas.map(l => {
+    const cant   = parseFloat(l.cantidad || 0);
+    const precio = parseFloat(l.precio   || 0);
+    const sub    = cant * precio * (1 - parseFloat(l.descuento || 0) / 100);
+    return `<div class="line-item">
+      <div class="line-qty">${cant % 1 === 0 ? cant : cant.toFixed(2)}</div>
+      <div class="line-desc">
+        <div class="line-name">${l.descripcion || '—'}</div>
+        <div class="line-code">${l.codigoArticulo || ''}</div>
       </div>
-      <div class="linea-cant"><input type="number" min="0.01" step="0.01" value="${l.cantidad}" onchange="updateCant(${i}, this.value)" /></div>
-      <div class="linea-precio">${fmtMoney(sub)}</div>
-      <button class="linea-del" onclick="deleteLinea(${i})">✕</button>
+      <div class="line-price">${fmtMoney(sub)}</div>
     </div>`;
   }).join('');
 
-  el.innerHTML = `
-  <div style="background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; margin-bottom:1rem; font-size:12px; color:var(--muted);">
-    <strong style="color:var(--text)">Cliente:</strong> ${pedidoClienteNombre} &nbsp;·&nbsp;
-    <strong style="color:var(--text)">Vendedor:</strong> ${pedidoVendedorNombre}
-  </div>
-  <div class="table-wrap" style="padding:0.75rem 1rem;">${rows}</div>
-  <div style="display:flex; justify-content:flex-end; padding:0.75rem 0; font-size:15px; font-weight:600; font-family:var(--mono);">
-    Total estimado: <span style="color:var(--accent2); margin-left:12px;">${fmtMoney(total)}</span>
-  </div>`;
+  document.getElementById('main').innerHTML = `
+    <div class="pedido-card">
+      <div class="pedido-header">
+        <div class="pedido-num">Pedido #${pedido.secuencial || pedido.id}</div>
+        <div class="pedido-fecha">${pedido.fecha || ''}</div>
+      </div>
+      ${itemsHtml || '<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:13px;">Sin artículos</div>'}
+    </div>
+    <div class="totals">
+      ${descuento > 0 ? `<div class="total-row"><span>Descuento</span><span>-${fmtMoney(descuento)}</span></div>` : ''}
+      ${impuesto  > 0 ? `<div class="total-row"><span>Impuesto</span><span>${fmtMoney(impuesto)}</span></div>`  : ''}
+      <div class="total-row grand"><span>Total</span><span>${fmtMoney(total)}</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn-pay btn-yappy" onclick="abrirYappy()">
+        <span>💚</span> Pagar con Yappy
+      </button>
+      <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
+        <span>🏪</span> Pagar en caja
+      </button>
+    </div>
+    <div style="text-align:center;">
+      <button class="refresh-btn" onclick="recargar()">↻ Actualizar pedido</button>
+    </div>`;
 }
 
-function updateCant(i, val) {
-  pedidoLineas[i].cantidad = parseFloat(val) || 1;
-  renderPreview();
+// ── YAPPY ─────────────────────────────────────────────────────
+function abrirYappy() {
+  if (!pedidoActual) return;
+  const total = parseFloat(pedidoActual.total || 0);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-title">💚 Pagar con Yappy</div>
+      <div class="modal-sub">Ingresa tu número de celular. Recibirás una notificación en tu app Yappy para aprobar el pago.</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="tel-wrap">
+          <span class="tel-prefix">🇵🇦 +507</span>
+          <input type="tel" id="yappy-tel" class="tel-input" placeholder="6000-0000" maxlength="9"
+            onkeydown="if(event.key==='Enter') procesarYappy()" />
+        </div>
+        <div class="total-preview">
+          <span style="color:var(--muted)">Total a pagar</span>
+          <span style="font-weight:700; color:var(--accent)">${fmtMoney(total)}</span>
+        </div>
+        <button class="btn-pay btn-yappy" id="btn-yappy-pagar" onclick="procesarYappy()">
+          Enviar solicitud de pago
+        </button>
+        <button class="btn-pay btn-mesero" onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('yappy-tel')?.focus(), 150);
 }
 
-function deleteLinea(i) {
-  pedidoLineas.splice(i, 1);
-  renderPreview();
-  mostrarBotonRevisar();
-}
+async function procesarYappy() {
+  const tel = document.getElementById('yappy-tel')?.value.replace(/\D/g, '');
+  if (!tel || tel.length < 7) { alert('Ingresa un número de celular válido'); return; }
 
-function resetPedido() {
-  document.getElementById('step-review').style.display = 'none';
-}
-
-async function confirmarPedido() {
-  if (!pedidoLineas.length) { showToast('No hay productos en el pedido'); return; }
-  const btn = document.getElementById('btn-confirmar');
-  btn.disabled = true; btn.textContent = 'Enviando...';
-  const resEl = document.getElementById('pedido-result');
-  resEl.innerHTML = '';
+  const btn = document.getElementById('btn-yappy-pagar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
 
   try {
-    const articulos = pedidoLineas.map(l => ({
-      codigoBarraId: String(l.codigoBarraId),
-      cantidad: l.cantidad.toFixed(4),
-      precio: l.precio.toFixed(2),
-      descuento: '0.00'
-    }));
+    const total    = parseFloat(pedidoActual.total    || 0);
+    const impuesto = parseFloat(pedidoActual.impuesto || 0);
+    const subtotal = total - impuesto;
 
-    const fd = new FormData();
-    fd.append('vendedorId', pedidoVendedorId);
-    fd.append('clienteId', pedidoClienteId);
-    fd.append('articulos', JSON.stringify(articulos));
-
-    const r = await fetch(BASE_URL + '/apipedido/terminar', {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/yappy-pago`, {
       method: 'POST',
-      headers: { 'Authorization': TOKEN },
-      body: fd
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        total:    total.toFixed(2),
+        subtotal: subtotal.toFixed(2),
+        taxes:    impuesto.toFixed(2),
+        orderId:  String(pedidoActual.id),
+        tel,
+        mesa: mesaNum
+      })
     });
-    const data = await r.json();
-    if (data.error) throw new Error(data.error.message);
 
-    const d = data.data;
-    resEl.innerHTML = `
-    <div style="background:#e6f7ef; border:1px solid #a3d9bc; border-radius:var(--radius); padding:1.25rem;">
-      <div style="font-size:15px; font-weight:600; color:#0e6e3a; margin-bottom:0.5rem;">✓ Pedido creado exitosamente</div>
-      <div style="font-size:13px; color:var(--muted);">N° interno: <span style="color:var(--text);font-family:var(--mono)">${d.numeroInterno||'—'}</span></div>
-      ${d.clienteEmail ? `<div style="font-size:13px; color:var(--muted); margin-top:4px;">Email: <span style="color:var(--text)">${d.clienteEmail}</span></div>` : ''}
-    </div>`;
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
 
-    pedidoLineas = [];
-    document.getElementById('chat-messages').innerHTML = '';
-    mostrarBotonRevisar();
-    showToast('Pedido #' + (d.numeroInterno||'') + ' creado');
+    closeModal();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      mostrarExito('¡Solicitud enviada!', 'Revisa tu app Yappy y aprueba el pago de ' + fmtMoney(total));
+    }
 
   } catch(e) {
-    resEl.innerHTML = `<div style="background:#fdecea; border:1px solid #f5c6bc; border-radius:var(--radius); padding:1rem; color:#c0392b; font-size:13px;">⚠ ${e.message}</div>`;
-  } finally {
-    btn.disabled = false; btn.textContent = '✓ Confirmar pedido';
+    alert('Error Yappy: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Enviar solicitud de pago';
   }
 }
 
-document.getElementById('inp-pass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+// ── OTROS PAGOS ───────────────────────────────────────────────
+function pagarEnCaja() {
+  showModal('🏪 Pagar en caja', 'Dirígete a la caja para realizar tu pago en efectivo o tarjeta.',
+    [{ label: 'Entendido', cls: 'btn-switchpay', action: closeModal }]);
+}
+
+function mostrarVacio(titulo, sub) {
+  document.getElementById('main').innerHTML = `
+    <div class="state-box">
+      <div class="state-icon">🍽️</div>
+      <div class="state-title">${titulo}</div>
+      <div class="state-sub">${sub}</div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="refresh-btn" onclick="recargar()">↻ Actualizar</button>
+    </div>`;
+}
+
+function mostrarError(msg) {
+  setStatus('Error', 'status-vacio');
+  document.getElementById('main').innerHTML = `
+    <div class="state-box">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title">Error de conexión</div>
+      <div class="state-sub">${msg}</div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="refresh-btn" onclick="recargar()">↻ Reintentar</button>
+    </div>`;
+}
+
+function mostrarExito(titulo, sub) {
+  document.getElementById('main').insertAdjacentHTML('afterbegin', `
+    <div class="success-banner">
+      <div class="success-icon">✅</div>
+      <div class="success-title">${titulo}</div>
+      <div class="success-sub">${sub}</div>
+    </div>`);
+}
+
+function setStatus(txt, cls) {
+  const el = document.getElementById('header-status');
+  el.textContent = txt;
+  el.className = 'header-status ' + cls;
+}
+
+function showModal(title, sub, btns) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'modal-overlay';
+  const btnsHtml = btns.map(b =>
+    `<button class="btn-pay ${b.cls}" onclick="(${b.action.toString()})()">${b.label}</button>`
+  ).join('');
+  overlay.innerHTML = `<div class="modal">
+    <div class="modal-title">${title}</div>
+    <div class="modal-sub">${sub}</div>
+    <div class="modal-btns">${btnsHtml}</div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+function closeModal() {
+  const el = document.getElementById('modal-overlay');
+  if (el) el.remove();
+}
+
+async function recargar() {
+  document.getElementById('main').innerHTML = `<div class="state-box"><div class="spinner"></div><div class="state-title">Actualizando...</div></div>`;
+  setStatus('•••', 'status-loading');
+  try {
+    if (!TOKEN) await obtenerToken();
+    await cargarPedido();
+  } catch(e) {
+    mostrarError(e.message);
+  }
+}
+
+setInterval(() => {
+  if (document.visibilityState === 'visible') recargar();
+}, 30000);
 </script>
 </body>
 </html>
