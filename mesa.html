@@ -614,7 +614,7 @@ async function facturarPedido() {
     fd.append('comprobanteId', String(pedidoActual.id));
     fd.append('articulos',     JSON.stringify(articulos));
     fd.append('formasPago',    JSON.stringify([{
-      formaPagoId: '2',
+      formaPagoId: '16',
       valor:       parseFloat(pedidoActual.total).toFixed(2)
     }]));
 
@@ -624,7 +624,7 @@ async function facturarPedido() {
       body: fd
     });
     const data = await r.json();
-    alert('Switch factura response: ' + JSON.stringify(data));
+
     if (data.error) throw new Error(data.error.message);
 
     mostrarExito(
