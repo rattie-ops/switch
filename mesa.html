@@ -383,7 +383,16 @@ async function obtenerToken() {
 async function init() {
   try {
     await obtenerToken();
-    await cargarPedido();
+    const pago = params.get('pago');
+    if (pago === 'ok') {
+      await cargarPedido();
+      await facturarPedido();
+    } else if (pago === 'fail') {
+      await cargarPedido();
+      mostrarError('El pago no fue completado. Intenta de nuevo o paga en caja.');
+    } else {
+      await cargarPedido();
+    }
   } catch(e) {
     mostrarError(e.message);
   }
@@ -604,6 +613,41 @@ async function enviarSwitchPay() {
 }
 
 // ── YAPPY ─────────────────────────────────────────────────────
+// ── FACTURAR ──────────────────────────────────────────────────
+async function facturarPedido() {
+  if (!pedidoActual) return;
+
+  try {
+    const fd = new FormData();
+    fd.append('vendedorId',   '1');
+    fd.append('clienteId',    String(MESA_IDS[mesaNum]));
+    fd.append('comprobante',  'PEDIDO');
+    fd.append('comprobanteId', String(pedidoActual.id));
+    fd.append('formasPago',   JSON.stringify([{
+      formaPagoId: '16',
+      valor:       parseFloat(pedidoActual.total).toFixed(2)
+    }]));
+
+    const r = await fetch(API_URL + '/apifactura/terminar', {
+      method: 'POST',
+      headers: { 'Authorization': TOKEN },
+      body: fd
+    });
+    const data = await r.json();
+
+    if (data.error) throw new Error(data.error.message);
+
+    mostrarExito(
+      '✅ ¡Pago completado!',
+      'Factura #' + (data.data.numeroInterno || '') + ' generada. ¡Gracias por tu compra!'
+    );
+
+  } catch(e) {
+    // Si ya fue facturado u otro error, mostrar éxito del pago igual
+    mostrarExito('✅ ¡Pago recibido!', 'Tu pago con Yappy fue procesado. ¡Gracias!');
+  }
+}
+
 function abrirModalYappy() {
   if (!window._yappyData) return;
   const { totalFmt } = window._yappyData;
