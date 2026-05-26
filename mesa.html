@@ -623,12 +623,24 @@ async function facturarPedido() {
   if (!pedidoActual) return;
 
   try {
+    // Cargar detalle del pedido para obtener artículos
+    const dd = await apiGet('/apipedido/info?pedidoId=' + pedidoActual.id);
+    const lineas = dd.detalle || [];
+
+    const articulos = lineas.map(l => ({
+      codigoBarraId: String(l.codigoBarraId),
+      cantidad:      parseFloat(l.cantidad).toFixed(4),
+      precio:        parseFloat(l.precio).toFixed(2),
+      descuento:     parseFloat(l.descuento || 0).toFixed(2)
+    }));
+
     const fd = new FormData();
-    fd.append('vendedorId',   '1');
-    fd.append('clienteId',    String(MESA_IDS[mesaNum]));
-    fd.append('comprobante',  'PEDIDO');
+    fd.append('vendedorId',    '1');
+    fd.append('clienteId',     String(MESA_IDS[mesaNum]));
+    fd.append('comprobante',   'PEDIDO');
     fd.append('comprobanteId', String(pedidoActual.id));
-    fd.append('formasPago',   JSON.stringify([{
+    fd.append('articulos',     JSON.stringify(articulos));
+    fd.append('formasPago',    JSON.stringify([{
       formaPagoId: '16',
       valor:       parseFloat(pedidoActual.total).toFixed(2)
     }]));
