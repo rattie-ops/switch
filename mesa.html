@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mi pedido</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="https://bt-cdn.yappy.cloud/v1/cdn/web-component-btn-yappy.js" as="script" crossorigin>
 <script type="module" src="https://bt-cdn.yappy.cloud/v1/cdn/web-component-btn-yappy.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -500,7 +501,11 @@ function renderPedido(pedido, detalle) {
     </div>
 
       <div class="actions">
-        <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center; min-height:50px;"></div>
+        <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center; min-height:50px;">
+          <div style="width:100%; height:48px; background:#00C244; border-radius:10px; display:flex; align-items:center; justify-content:center; opacity:0.3;">
+            <span style="color:#fff; font-size:14px; font-weight:600;">Cargando Yappy...</span>
+          </div>
+        </div>
         <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
           <span>🏪</span> Pagar en caja
         </button>
