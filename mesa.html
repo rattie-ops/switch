@@ -639,7 +639,7 @@ async function facturarPedido() {
       body: fd
     });
     const data = await r.json();
-
+    alert('Switch factura response: ' + JSON.stringify(data));
     if (data.error) throw new Error(data.error.message);
 
     mostrarExito(
@@ -648,7 +648,7 @@ async function facturarPedido() {
     );
 
   } catch(e) {
-    // Si ya fue facturado u otro error, mostrar éxito del pago igual
+    alert('Error facturando: ' + e.message);
     mostrarExito('✅ ¡Pago recibido!', 'Tu pago con Yappy fue procesado. ¡Gracias!');
   }
 }
