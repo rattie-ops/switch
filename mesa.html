@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mi pedido</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="preload" href="https://bt-cdn.yappy.cloud/v1/cdn/web-component-btn-yappy.js" as="script" crossorigin>
-<script type="module" src="https://bt-cdn.yappy.cloud/v1/cdn/web-component-btn-yappy.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -501,11 +500,10 @@ function renderPedido(pedido, detalle) {
     </div>
 
       <div class="actions">
-        <div id="yappy-btn-wrap" style="width:100%; display:flex; justify-content:center; min-height:50px;">
-          <div style="width:100%; height:48px; background:#00C244; border-radius:10px; display:flex; align-items:center; justify-content:center; opacity:0.3;">
-            <span style="color:#fff; font-size:14px; font-weight:600;">Cargando Yappy...</span>
-          </div>
-        </div>
+        <button class="btn-pay btn-yappy" onclick="abrirModalYappy()" style="background:#00C244;">
+          <img src="https://bt-cdn.yappy.cloud/v1/cdn/assets/logo-yappy-blanco.svg" style="height:22px;" onerror="this.style.display='none'">
+          Pagar con Yappy
+        </button>
         <button class="btn-pay btn-mesero" onclick="pagarEnCaja()">
           <span>🏪</span> Pagar en caja
         </button>
@@ -524,31 +522,6 @@ function renderPedido(pedido, detalle) {
     mesa:       mesaNum,
     totalFmt:   fmtMoney(total)
   };
-
-  // Inyectar botón oficial de Yappy
-  const yappyWrap = document.getElementById('yappy-btn-wrap');
-  if (yappyWrap) {
-    yappyWrap.innerHTML = '';
-    const btnYappy = document.createElement('btn-yappy');
-    btnYappy.setAttribute('merchant-id', '7d9be35b-2c61-4afb-a3be-afe549b1de5f');
-    btnYappy.setAttribute('url-domain',  'https://mesas.mambabydiana.com');
-    btnYappy.setAttribute('order-id',    String(pedido.id));
-    btnYappy.setAttribute('total',       total.toFixed(2));
-    btnYappy.setAttribute('subtotal',    (total - impuesto).toFixed(2));
-    btnYappy.setAttribute('taxes',       impuesto.toFixed(2));
-    btnYappy.setAttribute('shipping',    '0.00');
-    btnYappy.setAttribute('discount',    '0.00');
-    btnYappy.setAttribute('success-url', `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=ok`);
-    btnYappy.setAttribute('fail-url',    `https://mesas.mambabydiana.com/mesa.html?mesa=${mesaNum}&pago=fail`);
-    btnYappy.setAttribute('color',       'brand');
-    btnYappy.style.width = '100%';
-    btnYappy.addEventListener('eventClick', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      abrirModalYappy();
-    });
-    yappyWrap.appendChild(btnYappy);
-  }
 }
 
 function mostrarVacio(titulo, sub) {
