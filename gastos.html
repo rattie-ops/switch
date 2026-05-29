@@ -57,139 +57,89 @@
     height: 100vh;
     z-index: 100;
   }
-
   .logo {
     padding: 22px 20px 18px;
     border-bottom: 1px solid var(--border);
   }
-  .logo-mark {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
+  .logo-mark { display: flex; align-items: center; gap: 9px; }
   .logo-icon {
     width: 32px; height: 32px;
     background: var(--text);
     border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
-    color: #fff;
-    font-size: 16px;
+    color: #fff; font-size: 16px;
   }
   .logo-name { font-size: 15px; font-weight: 500; letter-spacing: -.02em; }
   .logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-  .nav { padding: 10px 10px; flex: 1; overflow-y: auto; }
+  .nav { padding: 10px; flex: 1; overflow-y: auto; }
   .nav-section { margin-bottom: 18px; }
   .nav-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    color: var(--text3);
-    text-transform: uppercase;
-    padding: 0 10px;
-    margin-bottom: 4px;
+    font-size: 10px; font-weight: 500; letter-spacing: .08em;
+    color: var(--text3); text-transform: uppercase;
+    padding: 0 10px; margin-bottom: 4px;
   }
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; align-items: center; gap: 10px;
     padding: 8px 10px;
     border-radius: var(--radius-sm);
     color: var(--text2);
-    cursor: pointer;
-    font-size: 13.5px;
+    cursor: pointer; font-size: 13.5px;
     transition: all .15s;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    font-family: inherit;
-    position: relative;
+    border: none; background: none;
+    width: 100%; text-align: left;
+    font-family: inherit; position: relative;
   }
   .nav-item:hover { background: var(--surface2); color: var(--text); }
   .nav-item.active { background: var(--text); color: #fff; }
   .nav-item i { font-size: 17px; flex-shrink: 0; }
   .nav-badge {
     margin-left: auto;
-    background: var(--warning-light);
-    color: var(--warning);
-    font-size: 10px;
-    font-weight: 500;
-    padding: 2px 6px;
-    border-radius: 20px;
+    background: var(--warning-light); color: var(--warning);
+    font-size: 10px; font-weight: 500;
+    padding: 2px 6px; border-radius: 20px;
     border: 1px solid rgba(217,119,6,.2);
   }
   .nav-item.active .nav-badge { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.3); }
-
   .user-area {
-    padding: 14px 14px;
+    padding: 14px;
     border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; align-items: center; gap: 10px;
   }
   .avatar {
-    width: 34px; height: 34px;
-    border-radius: 50%;
+    width: 34px; height: 34px; border-radius: 50%;
     background: linear-gradient(135deg, #BFDBFE, #93C5FD);
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 500;
-    color: #1D4ED8;
-    flex-shrink: 0;
+    font-size: 12px; font-weight: 500; color: #1D4ED8; flex-shrink: 0;
   }
   .user-name { font-size: 13px; font-weight: 500; }
   .user-role {
-    font-size: 11px;
-    color: var(--text3);
-    background: var(--surface2);
-    padding: 1px 7px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-top: 2px;
+    font-size: 11px; color: var(--text3);
+    background: var(--surface2); padding: 1px 7px;
+    border-radius: 20px; display: inline-block; margin-top: 2px;
   }
 
   /* MAIN */
-  .main {
-    margin-left: var(--sidebar-w);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
   .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
   }
   .topbar-left { display: flex; align-items: center; gap: 8px; }
   .breadcrumb { font-size: 13px; color: var(--text3); }
   .breadcrumb span { color: var(--text); font-weight: 500; }
   .topbar-right { display: flex; align-items: center; gap: 10px; }
-
   .content { padding: 28px; flex: 1; }
 
   /* BUTTONS */
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 13.5px;
-    font-weight: 400;
-    cursor: pointer;
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    font-size: 13.5px; font-weight: 400; cursor: pointer;
     border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text);
-    font-family: inherit;
-    transition: all .15s;
-    white-space: nowrap;
+    background: var(--surface); color: var(--text);
+    font-family: inherit; transition: all .15s; white-space: nowrap;
   }
   .btn:hover { background: var(--surface2); }
   .btn i { font-size: 16px; }
@@ -205,41 +155,23 @@
   .btn-ghost:hover { background: var(--surface2); }
 
   /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .card-head {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
   }
-  .card-head h2 {
-    font-size: 14px;
-    font-weight: 500;
-    display: flex; align-items: center; gap: 8px;
-  }
+  .card-head h2 { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .card-head h2 i { font-size: 17px; color: var(--accent); }
   .card-body { padding: 20px; }
 
   /* METRICS */
   .metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
   .metric {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    position: relative; overflow: hidden;
   }
-  .metric::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
+  .metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
   .metric.m-total::after { background: var(--text); }
   .metric.m-pending::after { background: var(--warning); }
   .metric.m-approved::after { background: var(--success); }
@@ -252,24 +184,16 @@
   .metric-sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
 
   /* BADGES */
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    font-size: 11.5px;
-    font-weight: 400;
-  }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11.5px; font-weight: 400; }
   .badge i { font-size: 12px; }
   .b-pending { background: var(--warning-light); color: var(--warning); border: 1px solid rgba(217,119,6,.2); }
   .b-approved { background: var(--success-light); color: var(--success); border: 1px solid rgba(22,163,74,.2); }
   .b-rejected { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(220,38,38,.2); }
   .b-paid { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(37,99,235,.2); }
+  .b-partial { background: #FFF7ED; color: #C2410C; border: 1px solid rgba(194,65,12,.2); }
 
   /* CATEGORY TAGS */
-  .cat-tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 9px; border-radius: 20px; font-size: 12px;
-  }
+  .cat-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 12px; }
   .cat-tag i { font-size: 13px; }
   .ct-transport { background: #EFF6FF; color: #1D4ED8; }
   .ct-hotel { background: var(--purple-light); color: var(--purple); }
@@ -282,56 +206,48 @@
   /* TABLE */
   table { width: 100%; border-collapse: collapse; }
   thead th {
-    padding: 10px 16px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
+    padding: 10px 16px; text-align: left;
+    font-size: 11px; font-weight: 500; color: var(--text3);
+    text-transform: uppercase; letter-spacing: .06em;
+    background: var(--surface2); border-bottom: 1px solid var(--border);
   }
-  tbody td {
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13.5px;
-    vertical-align: middle;
-  }
+  tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13.5px; vertical-align: middle; }
   tbody tr:last-child td { border-bottom: none; }
   tbody tr { transition: background .1s; cursor: pointer; }
   tbody tr:hover td { background: #FAFAF8; }
 
-  /* FORM EXPENSE LINES */
+  /* PROJECT GROUP HEADER in tables */
+  .proj-group-row td {
+    background: var(--surface2) !important;
+    padding: 8px 16px !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    color: var(--text2) !important;
+    border-bottom: 1px solid var(--border) !important;
+    cursor: default !important;
+  }
+  .proj-group-row:hover td { background: var(--surface2) !important; }
+
+  /* FORM */
   .trip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .form-group { margin-bottom: 14px; }
   .form-group label {
-    display: block;
-    font-size: 11.5px;
-    font-weight: 500;
-    color: var(--text2);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: .04em;
+    display: block; font-size: 11.5px; font-weight: 500; color: var(--text2);
+    margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em;
   }
   .form-group input,
   .form-group select,
   .form-group textarea {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    font-size: 13.5px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: var(--surface);
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    font-size: 13.5px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--surface);
     transition: border-color .15s, box-shadow .15s;
   }
   .form-group input:focus,
   .form-group select:focus,
   .form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent);
+    outline: none; border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(37,99,235,.1);
   }
   .form-group textarea { resize: vertical; min-height: 72px; }
@@ -340,123 +256,67 @@
   .lines-wrap { overflow-x: auto; }
   .lines-table { width: 100%; border-collapse: collapse; min-width: 820px; }
   .lines-table th {
-    padding: 9px 10px;
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--text3);
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    border-top: 1px solid var(--border);
-    text-align: left;
+    padding: 9px 10px; font-size: 10.5px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--text3);
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border); text-align: left;
   }
-  .lines-table td {
-    padding: 5px 5px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
+  .lines-table td { padding: 5px 5px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   .lines-table tr:hover td { background: #FAFAF8; }
   .lines-table input,
   .lines-table select {
-    width: 100%;
-    padding: 7px 9px;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: transparent;
-    transition: all .15s;
+    width: 100%; padding: 7px 9px;
+    border: 1px solid transparent; border-radius: var(--radius-sm);
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: transparent; transition: all .15s;
   }
   .lines-table input:hover,
-  .lines-table select:hover {
-    border-color: var(--border-strong);
-    background: var(--surface);
-  }
+  .lines-table select:hover { border-color: var(--border-strong); background: var(--surface); }
   .lines-table input:focus,
-  .lines-table select:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: var(--surface);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-  }
+  .lines-table select:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
   .lines-table input[type="number"] { text-align: right; font-family: 'DM Mono', monospace; }
   .lines-table input[type="date"] { font-size: 12.5px; }
-
-  .line-num {
-    width: 36px;
-    text-align: center;
-    font-size: 11px;
-    color: var(--text3);
-    font-family: 'DM Mono', monospace;
-    padding: 0 4px;
-    user-select: none;
-  }
+  .line-num { width: 36px; text-align: center; font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; padding: 0 4px; user-select: none; }
 
   .doc-btn {
     display: flex; align-items: center; gap: 5px;
-    padding: 6px 10px;
-    border: 1px dashed var(--border-strong);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: var(--text3);
-    font-size: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all .15s;
-    white-space: nowrap;
-    width: 100%;
+    padding: 6px 10px; border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm); background: transparent;
+    color: var(--text3); font-size: 12px; cursor: pointer;
+    font-family: inherit; transition: all .15s; white-space: nowrap; width: 100%;
   }
   .doc-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); border-style: solid; }
   .doc-btn.has-file { border-style: solid; border-color: #BBF7D0; background: var(--success-light); color: var(--success); }
   .doc-btn i { font-size: 14px; }
 
   .del-btn {
-    width: 30px; height: 30px;
-    border-radius: var(--radius-sm);
-    border: 1px solid transparent;
-    background: none;
-    color: var(--text3);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-    transition: all .15s;
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    border: 1px solid transparent; background: none; color: var(--text3);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; transition: all .15s;
   }
   .del-btn:hover { background: var(--danger-light); color: var(--danger); border-color: rgba(220,38,38,.2); }
 
   .add-line-row {
     display: flex; align-items: center; gap: 8px;
-    padding: 10px 16px;
-    border-top: 1px solid var(--border);
-    cursor: pointer;
-    color: var(--text3);
-    font-size: 13px;
-    transition: all .15s;
-    background: none;
-    width: 100%;
-    font-family: inherit;
-    border-bottom: none; border-left: none; border-right: none;
+    padding: 10px 16px; border-top: 1px solid var(--border);
+    cursor: pointer; color: var(--text3); font-size: 13px;
+    transition: all .15s; background: none; width: 100%;
+    font-family: inherit; border-bottom: none; border-left: none; border-right: none;
   }
   .add-line-row:hover { background: var(--accent-light); color: var(--accent); }
   .add-line-row i { font-size: 16px; }
 
   .totals-footer {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    background: var(--surface2);
+    padding: 14px 20px; border-top: 1px solid var(--border); background: var(--surface2);
   }
   .totals-chips { display: flex; gap: 8px; flex-wrap: wrap; }
   .tot-chip {
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    font-family: 'DM Mono', monospace;
+    padding: 4px 10px; border-radius: 20px; font-size: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text2); font-family: 'DM Mono', monospace;
   }
   .tot-chip i { font-size: 13px; }
   .total-amount { display: flex; align-items: baseline; gap: 8px; }
@@ -465,66 +325,72 @@
 
   .form-footer {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
+    padding: 16px 20px; border-top: 1px solid var(--border);
   }
 
-  /* APPROVAL VIEW */
-  .approval-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 14px;
-    overflow: hidden;
+  /* PROJECT CARD — approval & accounting views */
+  .proj-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
     transition: box-shadow .2s;
   }
-  .approval-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.06); }
-  .approval-header {
+  .proj-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+  .proj-card-head {
     padding: 14px 20px;
     display: flex; align-items: center; gap: 14px;
     border-bottom: 1px solid var(--border);
-  }
-  .approval-body { padding: 14px 20px; }
-  .approval-lines { display: grid; gap: 8px; }
-  .approval-line {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 14px;
     background: var(--surface2);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
   }
-  .approval-line .al-desc { flex: 1; }
-  .approval-line .al-amt { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
-  .approval-line .al-doc {
-    display: flex; align-items: center; gap: 4px;
-    font-size: 11px; color: var(--accent);
-    background: var(--accent-light); padding: 2px 8px; border-radius: 10px;
+  .proj-icon {
+    width: 38px; height: 38px; border-radius: var(--radius-sm);
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--accent); flex-shrink: 0;
   }
-  .approval-actions { display: flex; gap: 8px; justify-content: flex-end; padding: 12px 20px; border-top: 1px solid var(--border); }
+  .proj-info { flex: 1; min-width: 0; }
+  .proj-name { font-size: 14px; font-weight: 500; }
+  .proj-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .proj-total { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 300; white-space: nowrap; }
+  .proj-card-body { padding: 0; }
+  .proj-line {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; border-bottom: 1px solid var(--border); font-size: 13px;
+    transition: background .1s;
+  }
+  .proj-line:last-child { border-bottom: none; }
+  .proj-line:hover { background: #FAFAF8; }
+  .pl-desc { flex: 1; }
+  .pl-date { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); white-space: nowrap; }
+  .pl-amt { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .pl-doc { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--accent); background: var(--accent-light); padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .proj-card-foot {
+    display: flex; gap: 8px; justify-content: space-between; align-items: center;
+    padding: 12px 20px; border-top: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .proj-foot-cats { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* STATUS coloring on proj-card-head left border */
+  .proj-card.status-pending { border-left: 3px solid var(--warning); }
+  .proj-card.status-approved { border-left: 3px solid var(--success); }
+  .proj-card.status-partial { border-left: 3px solid #F59E0B; }
+  .proj-card.status-rejected { border-left: 3px solid var(--danger); }
+  .proj-card.status-paid { border-left: 3px solid var(--accent); }
 
   /* MODAL */
   .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.3);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.3); z-index: 200;
+    align-items: center; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    width: 520px;
-    max-height: 90vh;
-    overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); width: 520px;
+    max-height: 90vh; overflow-y: auto;
     animation: fadeUp .2s ease;
   }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .modal-head h3 { font-size: 15px; font-weight: 500; }
   .modal-body { padding: 20px; }
@@ -548,31 +414,24 @@
   .toast {
     position: fixed; bottom: 24px; right: 24px;
     background: var(--text); color: #fff;
-    padding: 12px 18px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    transform: translateY(20px); opacity: 0;
+    padding: 12px 18px; border-radius: var(--radius-sm);
+    font-size: 13px; transform: translateY(20px); opacity: 0;
     transition: all .3s; pointer-events: none; z-index: 999;
-    display: flex; align-items: center; gap: 8px;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast.success { background: var(--success); }
 
-  /* SECTION HEADER */
   .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
   .page-title { font-size: 20px; font-weight: 500; letter-spacing: -.02em; }
   .page-sub { font-size: 13px; color: var(--text3); margin-top: 3px; }
 
-  /* HIDDEN */
   .hidden { display: none; }
   .view { display: none; }
   .view.active { display: block; }
 
-  /* EMPTY STATE */
   .empty { padding: 40px; text-align: center; color: var(--text3); }
   .empty i { font-size: 36px; display: block; margin-bottom: 10px; opacity: .4; }
 
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
@@ -591,7 +450,6 @@
       </div>
     </div>
   </div>
-
   <nav class="nav">
     <div class="nav-section">
       <div class="nav-label">Principal</div>
@@ -609,14 +467,16 @@
       <div class="nav-label">Administración</div>
       <button class="nav-item" onclick="showView('aprobar',this)" id="nav-aprobar">
         <i class="ti ti-checks"></i> Aprobar
-        <span class="nav-badge" id="pending-badge">3</span>
+        <span class="nav-badge" id="pending-badge" style="display:none">0</span>
       </button>
       <button class="nav-item" onclick="showView('contabilidad',this)" id="nav-contabilidad">
         <i class="ti ti-building-bank"></i> Contabilidad
       </button>
+      <button class="nav-item" onclick="showView('configuracion',this)" id="nav-configuracion">
+        <i class="ti ti-settings"></i> Configuración
+      </button>
     </div>
   </nav>
-
   <div class="user-area">
     <div class="avatar">MR</div>
     <div>
@@ -654,12 +514,12 @@
         <div class="metric m-total">
           <div class="metric-label">Total enviado</div>
           <div class="metric-val" id="m-total">$0.00</div>
-          <div class="metric-sub">Este mes</div>
+          <div class="metric-sub" id="m-proj-count">0 proyectos</div>
         </div>
         <div class="metric m-pending">
           <div class="metric-label">Pendiente aprobación</div>
           <div class="metric-val pending" id="m-pending">$0.00</div>
-          <div class="metric-sub" id="m-pending-count">0 solicitudes</div>
+          <div class="metric-sub" id="m-pending-count">0 proyectos</div>
         </div>
         <div class="metric m-approved">
           <div class="metric-label">Aprobado</div>
@@ -674,23 +534,10 @@
       </div>
       <div class="card">
         <div class="card-head">
-          <h2><i class="ti ti-clock"></i> Gastos recientes</h2>
+          <h2><i class="ti ti-folder"></i> Proyectos recientes</h2>
           <button class="btn btn-sm" onclick="showView('mis-gastos', document.getElementById('nav-mis-gastos'))">Ver todos</button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Categoría</th>
-              <th>Viaje</th>
-              <th>Fecha</th>
-              <th>Monto</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="dash-table"></tbody>
-        </table>
+        <div id="dash-projects"></div>
       </div>
     </div>
 
@@ -699,19 +546,19 @@
       <div class="page-header">
         <div>
           <div class="page-title">Nuevo gasto</div>
-          <div class="page-sub">Registra los gastos de tu viaje de trabajo</div>
+          <div class="page-sub">Registra los gastos de un proyecto o viaje de trabajo</div>
         </div>
       </div>
 
       <div class="card" style="margin-bottom:16px">
         <div class="card-head">
-          <h2><i class="ti ti-briefcase"></i> Información del viaje</h2>
+          <h2><i class="ti ti-folder"></i> Proyecto / Viaje</h2>
         </div>
         <div class="card-body">
           <div class="trip-grid">
             <div class="form-group">
-              <label>Nombre del viaje / proyecto *</label>
-              <input type="text" id="f-trip" placeholder="Ej: Reunión clientes Bogotá Q2">
+              <label>Nombre del proyecto *</label>
+              <input type="text" id="f-project" placeholder="Ej: Reunión clientes Bogotá Q2">
             </div>
             <div class="form-group">
               <label>Solicitado por</label>
@@ -774,86 +621,87 @@
       </div>
     </div>
 
-    <!-- MIS GASTOS -->
+    <!-- MIS GASTOS — grouped by project -->
     <div class="view" id="view-mis-gastos">
       <div class="page-header">
         <div>
           <div class="page-title">Mis gastos</div>
-          <div class="page-sub">Historial de tus solicitudes de reembolso</div>
+          <div class="page-sub">Historial de tus proyectos y solicitudes de reembolso</div>
         </div>
         <button class="btn btn-primary" onclick="showView('nuevo', document.getElementById('nav-nuevo'))">
           <i class="ti ti-plus"></i> Nuevo gasto
         </button>
       </div>
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Categoría</th>
-              <th>Viaje</th>
-              <th>Fecha</th>
-              <th>Monto</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="my-table"></tbody>
-        </table>
-      </div>
+      <div id="my-projects-list"></div>
     </div>
 
-    <!-- APROBAR -->
+    <!-- APROBAR — grouped by project -->
     <div class="view" id="view-aprobar">
       <div class="page-header">
         <div>
-          <div class="page-title">Aprobaciones pendientes</div>
-          <div class="page-sub" id="approval-sub">0 solicitudes esperando revisión</div>
+          <div class="page-title">Aprobaciones por proyecto</div>
+          <div class="page-sub" id="approval-sub">0 proyectos esperando revisión</div>
         </div>
       </div>
       <div id="approval-list"></div>
     </div>
 
-    <!-- CONTABILIDAD -->
+    <!-- CONTABILIDAD — grouped by project -->
     <div class="view" id="view-contabilidad">
       <div class="page-header">
         <div>
           <div class="page-title">Contabilidad</div>
-          <div class="page-sub">Gastos aprobados listos para pago</div>
+          <div class="page-sub">Proyectos aprobados listos para pago</div>
         </div>
       </div>
       <div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
         <div class="metric m-approved">
           <div class="metric-label">Por pagar</div>
           <div class="metric-val approved" id="acc-topay">$0.00</div>
-          <div class="metric-sub" id="acc-topay-count">0 gastos</div>
+          <div class="metric-sub" id="acc-topay-count">0 proyectos</div>
         </div>
         <div class="metric m-paid">
           <div class="metric-label">Pagado este mes</div>
           <div class="metric-val paid" id="acc-paid">$0.00</div>
-          <div class="metric-sub" id="acc-paid-count">0 reembolsos</div>
+          <div class="metric-sub" id="acc-paid-count">0 proyectos</div>
         </div>
         <div class="metric m-total">
           <div class="metric-label">Rechazados</div>
           <div class="metric-val" id="acc-rejected">$0.00</div>
-          <div class="metric-sub" id="acc-rejected-count">0 solicitudes</div>
+          <div class="metric-sub" id="acc-rejected-count">0 proyectos</div>
         </div>
       </div>
-      <div class="card" id="acc-card">
-        <div class="card-head">
-          <h2><i class="ti ti-circle-check"></i> Aprobados — pendientes de pago</h2>
-          <button class="btn btn-sm btn-success" onclick="markAllPaid()"><i class="ti ti-currency-dollar"></i> Marcar todos como pagados</button>
+      <div id="acc-list"></div>
+    </div>
+
+    <!-- CONFIGURACIÓN -->
+    <div class="view" id="view-configuracion">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Configuración</div>
+          <div class="page-sub">Administra las categorías y sus cuentas contables</div>
         </div>
-        <table>
-          <thead>
-            <tr><th>Empleado</th><th>Descripción</th><th>Categoría</th><th>Viaje</th><th>Fecha</th><th>Monto</th><th></th></tr>
-          </thead>
-          <tbody id="acc-table"></tbody>
-        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2><i class="ti ti-tag"></i> Categorías de gastos</h2>
+          <button class="btn btn-primary btn-sm" onclick="saveCategories()"><i class="ti ti-device-floppy"></i> Guardar cambios</button>
+        </div>
+        <div style="padding:0">
+          <div style="display:grid;grid-template-columns:1fr 1fr;padding:10px 20px 10px;background:var(--surface2);border-bottom:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Categoría</div>
+            <div style="font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Cuenta contable</div>
+          </div>
+          <div id="cat-config-list"></div>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+          <button class="btn btn-primary" onclick="saveCategories()"><i class="ti ti-device-floppy"></i> Guardar cambios</button>
+        </div>
       </div>
     </div>
 
-  </div><!-- /content -->
+  </div>
 </main>
 
 <!-- DETAIL MODAL -->
@@ -868,15 +716,17 @@
 let lineId = 0;
 const lines = [];
 const fileStore = {};
+let nextProjectId = 100;
+let nextExpenseId = 10;
 
 const CAT = {
-  transport: { label:'Transporte', icon:'ti-car', cls:'ct-transport' },
-  airfare:   { label:'Pasaje aéreo', icon:'ti-plane', cls:'ct-airfare' },
-  hotel:     { label:'Hotel', icon:'ti-building', cls:'ct-hotel' },
-  food:      { label:'Comidas', icon:'ti-fork', cls:'ct-food' },
-  tip:       { label:'Propinas', icon:'ti-coin', cls:'ct-tip' },
-  samples:   { label:'Muestras', icon:'ti-package', cls:'ct-samples' },
-  other:     { label:'Otro', icon:'ti-briefcase', cls:'ct-other' },
+  transport: { label:'Transporte',   icon:'ti-car',      cls:'ct-transport', cuenta:'' },
+  airfare:   { label:'Pasaje aéreo', icon:'ti-plane',    cls:'ct-airfare',   cuenta:'' },
+  hotel:     { label:'Hotel',        icon:'ti-building', cls:'ct-hotel',     cuenta:'' },
+  food:      { label:'Comidas',      icon:'ti-fork',     cls:'ct-food',      cuenta:'' },
+  tip:       { label:'Propinas',     icon:'ti-coin',     cls:'ct-tip',       cuenta:'' },
+  samples:   { label:'Muestras',     icon:'ti-package',  cls:'ct-samples',   cuenta:'' },
+  other:     { label:'Otro',         icon:'ti-briefcase',cls:'ct-other',     cuenta:'' },
 };
 
 const STATUS = {
@@ -884,223 +734,347 @@ const STATUS = {
   approved: { label:'Aprobado', cls:'b-approved', icon:'ti-check' },
   rejected: { label:'Rechazado', cls:'b-rejected', icon:'ti-x' },
   paid:     { label:'Pagado', cls:'b-paid', icon:'ti-currency-dollar' },
+  partial:  { label:'Parcial', cls:'b-partial', icon:'ti-adjustments' },
 };
 
-const expenses = [
-  {id:1,desc:'Vuelo PTY → BOG ida y vuelta',cat:'transport',amount:485,date:'2026-05-10',trip:'Reunión clientes Bogotá',status:'approved',requester:'María Rivera',docs:1},
-  {id:2,desc:'Hotel Marriott 3 noches',cat:'hotel',amount:390,date:'2026-05-11',trip:'Reunión clientes Bogotá',status:'approved',requester:'María Rivera',docs:1},
-  {id:3,desc:'Cena de negocios con cliente',cat:'food',amount:145.5,date:'2026-05-12',trip:'Reunión clientes Bogotá',status:'pending',requester:'María Rivera',docs:2},
-  {id:4,desc:'Taxi aeropuerto',cat:'transport',amount:35,date:'2026-05-14',trip:'Reunión clientes Bogotá',status:'pending',requester:'María Rivera',docs:1},
-  {id:5,desc:'Vuelo PTY → MIA conferencia',cat:'transport',amount:620,date:'2026-05-18',trip:'Conferencia TechLatam',status:'pending',requester:'Juan Pérez',docs:1},
-  {id:6,desc:'Hotel Hilton Miami 2 noches',cat:'hotel',amount:440,date:'2026-05-19',trip:'Conferencia TechLatam',status:'rejected',requester:'Juan Pérez',docs:1},
-  {id:7,desc:'Almuerzo con proveedor',cat:'food',amount:87.5,date:'2026-05-15',trip:'Visita proveedor',status:'paid',requester:'Ana González',docs:1},
+/* ---- DATA: projects contain expenses ---- */
+const projects = [
+  {
+    id: 1,
+    name: 'Reunión clientes Bogotá',
+    requester: 'María Rivera',
+    dateStart: '2026-05-10',
+    dateEnd: '2026-05-14',
+    notes: 'Visita comercial Q2',
+    status: 'partial', // mixed: some approved, some pending
+    expenses: [
+      {id:1, desc:'Vuelo PTY → BOG ida y vuelta', cat:'airfare', amount:485, date:'2026-05-10', docs:1, status:'approved'},
+      {id:2, desc:'Hotel Marriott 3 noches', cat:'hotel', amount:390, date:'2026-05-11', docs:1, status:'approved'},
+      {id:3, desc:'Cena de negocios con cliente', cat:'food', amount:145.5, date:'2026-05-12', docs:2, status:'pending'},
+      {id:4, desc:'Taxi aeropuerto', cat:'transport', amount:35, date:'2026-05-14', docs:1, status:'pending'},
+    ]
+  },
+  {
+    id: 2,
+    name: 'Conferencia TechLatam Miami',
+    requester: 'Juan Pérez',
+    dateStart: '2026-05-18',
+    dateEnd: '2026-05-21',
+    notes: 'Conferencia anual de tecnología',
+    status: 'pending',
+    expenses: [
+      {id:5, desc:'Vuelo PTY → MIA ida y vuelta', cat:'airfare', amount:620, date:'2026-05-18', docs:1, status:'pending'},
+      {id:6, desc:'Hotel Hilton Miami 3 noches', cat:'hotel', amount:440, date:'2026-05-18', docs:1, status:'pending'},
+      {id:7, desc:'Registro conferencia', cat:'other', amount:250, date:'2026-05-20', docs:1, status:'pending'},
+    ]
+  },
+  {
+    id: 3,
+    name: 'Visita proveedor Medellín',
+    requester: 'Ana González',
+    dateStart: '2026-05-15',
+    dateEnd: '2026-05-15',
+    notes: '',
+    status: 'paid',
+    expenses: [
+      {id:8, desc:'Tiquete aéreo PTY → MDE', cat:'airfare', amount:310, date:'2026-05-15', docs:1, status:'paid'},
+      {id:9, desc:'Almuerzo con proveedor', cat:'food', amount:87.5, date:'2026-05-15', docs:1, status:'paid'},
+    ]
+  },
 ];
 
+/* ---- HELPERS ---- */
 function catTag(cat) {
-  const c = CAT[cat]||CAT.other;
+  const c = CAT[cat] || CAT.other;
   return `<span class="cat-tag ${c.cls}"><i class="ti ${c.icon}"></i>${c.label}</span>`;
 }
 function statusBadge(s) {
-  const st = STATUS[s]||STATUS.pending;
+  const st = STATUS[s] || STATUS.pending;
   return `<span class="badge ${st.cls}"><i class="ti ${st.icon}"></i>${st.label}</span>`;
 }
+function avatarHtml(name, size=38) {
+  const initials = name.split(' ').map(n=>n[0]).join('').substring(0,2);
+  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:linear-gradient(135deg,#BFDBFE,#93C5FD);display:flex;align-items:center;justify-content:center;font-size:${size<=28?11:13}px;font-weight:500;color:#1D4ED8;flex-shrink:0">${initials}</div>`;
+}
+function projectStatus(proj) {
+  // derive project status from its expenses
+  const statuses = proj.expenses.map(e=>e.status);
+  if(statuses.every(s=>s==='paid')) return 'paid';
+  if(statuses.every(s=>s==='approved'||s==='paid')) return 'approved';
+  if(statuses.every(s=>s==='rejected')) return 'rejected';
+  if(statuses.every(s=>s==='pending')) return 'pending';
+  return 'partial';
+}
+function projectTotal(proj) {
+  return proj.expenses.reduce((s,e)=>s+e.amount, 0);
+}
+function catSummary(expenses) {
+  const cats = {};
+  expenses.forEach(e=>{ cats[e.cat]=(cats[e.cat]||0)+e.amount; });
+  return Object.entries(cats).map(([cat,sum])=>{
+    const c = CAT[cat]||CAT.other;
+    return `<span class="cat-tag ${c.cls}" style="font-size:11.5px"><i class="ti ${c.icon}"></i>$${sum.toFixed(2)}</span>`;
+  }).join('');
+}
 
+/* ---- VIEWS ---- */
 function showView(v, el) {
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   if(el) el.classList.add('active');
-  const titles = {dashboard:'Inicio','nuevo':'Nuevo gasto','mis-gastos':'Mis gastos',aprobar:'Aprobaciones',contabilidad:'Contabilidad'};
+  const titles = {dashboard:'Inicio', nuevo:'Nuevo gasto', 'mis-gastos':'Mis gastos', aprobar:'Aprobaciones', contabilidad:'Contabilidad', configuracion:'Configuración'};
   document.getElementById('breadcrumb').textContent = titles[v]||v;
   if(v==='dashboard') renderDashboard();
   if(v==='mis-gastos') renderMisGastos();
   if(v==='aprobar') renderAprobar();
   if(v==='contabilidad') renderContabilidad();
+  if(v==='configuracion') renderConfiguracion();
 }
 
+/* ---- DASHBOARD ---- */
 function renderDashboard() {
-  const total = expenses.reduce((s,e)=>s+e.amount,0);
-  const pend = expenses.filter(e=>e.status==='pending');
-  const appr = expenses.filter(e=>e.status==='approved');
-  const paid = expenses.filter(e=>e.status==='paid');
+  const allExp = projects.flatMap(p=>p.expenses);
+  const total = allExp.reduce((s,e)=>s+e.amount, 0);
+  const pend = allExp.filter(e=>e.status==='pending');
+  const appr = allExp.filter(e=>e.status==='approved');
+  const paid = allExp.filter(e=>e.status==='paid');
+  const pendProj = projects.filter(p=>['pending','partial'].includes(projectStatus(p)));
   document.getElementById('m-total').textContent = '$'+total.toFixed(2);
+  document.getElementById('m-proj-count').textContent = projects.length+' proyecto'+(projects.length!==1?'s':'');
   document.getElementById('m-pending').textContent = '$'+pend.reduce((s,e)=>s+e.amount,0).toFixed(2);
-  document.getElementById('m-pending-count').textContent = pend.length+' solicitudes';
+  document.getElementById('m-pending-count').textContent = pendProj.length+' proyecto'+(pendProj.length!==1?'s':'');
   document.getElementById('m-approved').textContent = '$'+appr.reduce((s,e)=>s+e.amount,0).toFixed(2);
   document.getElementById('m-paid').textContent = '$'+paid.reduce((s,e)=>s+e.amount,0).toFixed(2);
-  const recent = expenses.slice(-6).reverse();
-  document.getElementById('dash-table').innerHTML = recent.map(e=>`
-    <tr onclick="openDetail(${e.id})">
-      <td>${e.desc}</td>
-      <td>${catTag(e.cat)}</td>
-      <td style="color:var(--text3)">${e.trip}</td>
-      <td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12.5px">${e.date}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:500">$${e.amount.toFixed(2)}</td>
-      <td>${statusBadge(e.status)}</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail(${e.id})"><i class="ti ti-eye"></i></button></td>
-    </tr>`).join('');
+
+  const recent = projects.slice(-4).reverse();
+  document.getElementById('dash-projects').innerHTML = recent.length === 0
+    ? `<div class="empty"><i class="ti ti-folder"></i>No hay proyectos registrados</div>`
+    : recent.map(p => {
+        const ps = projectStatus(p);
+        const total = projectTotal(p);
+        return `
+        <div style="display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s"
+             onmouseover="this.style.background='#FAFAF8'" onmouseout="this.style.background=''"
+             onclick="openProjectDetail(${p.id})">
+          <div class="proj-icon"><i class="ti ti-folder"></i></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:500">${p.name}</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:2px">${avatarHtml(p.requester,22)} <span style="vertical-align:middle">${p.requester} &nbsp;·&nbsp; ${p.expenses.length} gasto${p.expenses.length!==1?'s':''}</span></div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-weight:500;margin-right:12px">$${total.toFixed(2)}</div>
+          ${statusBadge(ps)}
+        </div>`;
+      }).join('');
 }
 
+/* ---- MIS GASTOS ---- */
 function renderMisGastos() {
-  const mine = expenses.filter(e=>e.requester==='María Rivera');
-  document.getElementById('my-table').innerHTML = mine.map(e=>`
-    <tr onclick="openDetail(${e.id})">
-      <td>${e.desc}</td>
-      <td>${catTag(e.cat)}</td>
-      <td style="color:var(--text3)">${e.trip}</td>
-      <td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12.5px">${e.date}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:500">$${e.amount.toFixed(2)}</td>
-      <td>${statusBadge(e.status)}</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDetail(${e.id})"><i class="ti ti-eye"></i></button></td>
-    </tr>`).join('');
-}
-
-function renderAprobar() {
-  const pend = expenses.filter(e=>e.status==='pending');
-  updatePendingBadge();
-  document.getElementById('approval-sub').textContent = pend.length+' solicitudes esperando revisión';
-  if(pend.length===0) {
-    document.getElementById('approval-list').innerHTML = `<div class="card"><div class="empty"><i class="ti ti-circle-check"></i>No hay gastos pendientes de aprobación</div></div>`;
+  const mine = projects.filter(p=>p.requester==='María Rivera');
+  const container = document.getElementById('my-projects-list');
+  if(mine.length===0) {
+    container.innerHTML = `<div class="card"><div class="empty"><i class="ti ti-folder"></i>No tienes proyectos registrados</div></div>`;
     return;
   }
-  document.getElementById('approval-list').innerHTML = pend.map(e=>`
-    <div class="approval-card">
-      <div class="approval-header">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#BFDBFE,#93C5FD);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#1D4ED8;flex-shrink:0">${e.requester.split(' ').map(n=>n[0]).join('')}</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:500">${e.desc}</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:2px">${e.requester} &nbsp;·&nbsp; ${e.trip} &nbsp;·&nbsp; ${e.date}</div>
-        </div>
-        <div style="font-family:'DM Mono',monospace;font-size:18px;font-weight:300">$${e.amount.toFixed(2)}</div>
-        ${catTag(e.cat)}
-      </div>
-      <div class="approval-body">
-        <div class="approval-lines">
-          <div class="approval-line">
-            <span class="cat-tag ${CAT[e.cat].cls} al-cat"><i class="ti ${CAT[e.cat].icon}"></i>${CAT[e.cat].label}</span>
-            <span class="al-desc">${e.desc}</span>
-            <span class="al-amt">$${e.amount.toFixed(2)}</span>
-            ${e.docs>0?`<span class="al-doc"><i class="ti ti-paperclip" style="font-size:12px"></i>${e.docs} archivo(s)</span>`:''}
-          </div>
-        </div>
-      </div>
-      <div class="approval-actions">
-        <button class="btn btn-sm" onclick="openDetail(${e.id})"><i class="ti ti-eye"></i> Ver detalle</button>
-        <button class="btn btn-sm btn-danger" onclick="changeStatus(${e.id},'rejected')"><i class="ti ti-x"></i> Rechazar</button>
-        <button class="btn btn-sm btn-success" onclick="changeStatus(${e.id},'approved')"><i class="ti ti-check"></i> Aprobar</button>
-      </div>
-    </div>`).join('');
+  container.innerHTML = mine.map(p => buildProjectCard(p, 'employee')).join('');
 }
 
-function renderContabilidad() {
-  const appr = expenses.filter(e=>e.status==='approved');
-  const paid = expenses.filter(e=>e.status==='paid');
-  const rej  = expenses.filter(e=>e.status==='rejected');
-  document.getElementById('acc-topay').textContent = '$'+appr.reduce((s,e)=>s+e.amount,0).toFixed(2);
-  document.getElementById('acc-topay-count').textContent = appr.length+' gastos';
-  document.getElementById('acc-paid').textContent = '$'+paid.reduce((s,e)=>s+e.amount,0).toFixed(2);
-  document.getElementById('acc-paid-count').textContent = paid.length+' reembolsos';
-  document.getElementById('acc-rejected').textContent = '$'+rej.reduce((s,e)=>s+e.amount,0).toFixed(2);
-  document.getElementById('acc-rejected-count').textContent = rej.length+' solicitudes';
-  document.getElementById('acc-table').innerHTML = appr.map(e=>`
-    <tr>
-      <td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#BFDBFE,#93C5FD);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#1D4ED8">${e.requester.split(' ').map(n=>n[0]).join('')}</div>${e.requester}</div></td>
-      <td>${e.desc}</td>
-      <td>${catTag(e.cat)}</td>
-      <td style="color:var(--text3)">${e.trip}</td>
-      <td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12.5px">${e.date}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:500">$${e.amount.toFixed(2)}</td>
-      <td><button class="btn btn-sm btn-success" onclick="changeStatus(${e.id},'paid');renderContabilidad()"><i class="ti ti-check"></i> Pagado</button></td>
-    </tr>`).join('');
-}
-
-function changeStatus(id, status) {
-  const e = expenses.find(x=>x.id===id);
-  if(e) e.status = status;
+/* ---- APROBAR ---- */
+function renderAprobar() {
   updatePendingBadge();
-  const msgs = { approved:'Gasto aprobado correctamente', rejected:'Gasto rechazado', paid:'Marcado como pagado' };
-  showToast(msgs[status]||'Actualizado', status==='rejected'?'':'success');
-  closeModal();
-  if(document.getElementById('view-aprobar').classList.contains('active')) renderAprobar();
-  if(document.getElementById('view-contabilidad').classList.contains('active')) renderContabilidad();
+  const pendProj = projects.filter(p => p.expenses.some(e=>e.status==='pending'));
+  document.getElementById('approval-sub').textContent = pendProj.length+' proyecto'+(pendProj.length!==1?'s':'')+' con gastos pendientes';
+  const container = document.getElementById('approval-list');
+  if(pendProj.length===0) {
+    container.innerHTML = `<div class="card"><div class="empty"><i class="ti ti-circle-check"></i>No hay proyectos pendientes de aprobación</div></div>`;
+    return;
+  }
+  container.innerHTML = pendProj.map(p => buildProjectCard(p, 'approval')).join('');
+}
+
+/* ---- CONTABILIDAD ---- */
+function renderContabilidad() {
+  const approvedProj = projects.filter(p => p.expenses.some(e=>e.status==='approved'));
+  const paidProj = projects.filter(p => projectStatus(p)==='paid');
+  const rejProj = projects.filter(p => projectStatus(p)==='rejected');
+  const topay = approvedProj.flatMap(p=>p.expenses.filter(e=>e.status==='approved')).reduce((s,e)=>s+e.amount,0);
+  const paidAmt = paidProj.flatMap(p=>p.expenses).reduce((s,e)=>s+e.amount,0);
+  const rejAmt = rejProj.flatMap(p=>p.expenses).reduce((s,e)=>s+e.amount,0);
+  document.getElementById('acc-topay').textContent = '$'+topay.toFixed(2);
+  document.getElementById('acc-topay-count').textContent = approvedProj.length+' proyecto'+(approvedProj.length!==1?'s':'');
+  document.getElementById('acc-paid').textContent = '$'+paidAmt.toFixed(2);
+  document.getElementById('acc-paid-count').textContent = paidProj.length+' proyecto'+(paidProj.length!==1?'s':'');
+  document.getElementById('acc-rejected').textContent = '$'+rejAmt.toFixed(2);
+  document.getElementById('acc-rejected-count').textContent = rejProj.length+' proyecto'+(rejProj.length!==1?'s':'');
+
+  const container = document.getElementById('acc-list');
+  if(approvedProj.length===0) {
+    container.innerHTML = `<div class="card"><div class="empty"><i class="ti ti-circle-check"></i>No hay proyectos listos para pago</div></div>`;
+    return;
+  }
+  container.innerHTML = approvedProj.map(p => buildProjectCard(p, 'accounting')).join('');
+}
+
+/* ---- PROJECT CARD BUILDER ---- */
+function buildProjectCard(proj, mode) {
+  const ps = projectStatus(proj);
+  const total = projectTotal(proj);
+  const pendingExp = proj.expenses.filter(e=>e.status==='pending');
+  const approvedExp = proj.expenses.filter(e=>e.status==='approved');
+  // Which expenses to show in this mode
+  let showExp = proj.expenses;
+  if(mode==='approval') showExp = pendingExp;
+  if(mode==='accounting') showExp = approvedExp;
+
+  const expLines = showExp.map(e=>`
+    <div class="proj-line">
+      ${catTag(e.cat)}
+      <span class="pl-desc">${e.desc}</span>
+      <span class="pl-date">${e.date}</span>
+      <span class="pl-amt">$${e.amount.toFixed(2)}</span>
+      ${e.docs>0?`<span class="pl-doc"><i class="ti ti-paperclip" style="font-size:12px"></i>${e.docs} doc</span>`:''}
+      ${mode==='employee'?statusBadge(e.status):''}
+    </div>`).join('');
+
+  // Action buttons per mode
+  let actions = '';
+  if(mode==='approval' && pendingExp.length>0) {
+    actions = `
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="openProjectDetail(${proj.id})"><i class="ti ti-eye"></i> Ver detalle</button>
+        <button class="btn btn-sm btn-danger" onclick="approveProject(${proj.id},'rejected')"><i class="ti ti-x"></i> Rechazar proyecto</button>
+        <button class="btn btn-sm btn-success" onclick="approveProject(${proj.id},'approved')"><i class="ti ti-check"></i> Aprobar proyecto</button>
+      </div>`;
+  } else if(mode==='accounting' && approvedExp.length>0) {
+    actions = `
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-success" onclick="payProject(${proj.id})"><i class="ti ti-currency-dollar"></i> Marcar proyecto como pagado</button>
+      </div>`;
+  } else if(mode==='employee') {
+    actions = `<button class="btn btn-sm btn-ghost" onclick="openProjectDetail(${proj.id})"><i class="ti ti-eye"></i> Ver detalle</button>`;
+  }
+
+  const modeTotal = showExp.reduce((s,e)=>s+e.amount,0);
+  const showTotal = (mode==='approval'||mode==='accounting') ? modeTotal : total;
+
+  return `
+  <div class="proj-card status-${mode==='accounting'?'approved':ps}" id="proj-card-${proj.id}">
+    <div class="proj-card-head">
+      <div class="proj-icon"><i class="ti ti-folder"></i></div>
+      <div class="proj-info">
+        <div class="proj-name">${proj.name}</div>
+        <div class="proj-meta">
+          ${avatarHtml(proj.requester, 20)}
+          <span style="vertical-align:middle;margin-left:4px">${proj.requester}</span>
+          &nbsp;·&nbsp; ${proj.dateStart}${proj.dateEnd&&proj.dateEnd!==proj.dateStart?' → '+proj.dateEnd:''}
+          &nbsp;·&nbsp; ${proj.expenses.length} gasto${proj.expenses.length!==1?'s':''}
+          ${mode==='approval'?` &nbsp;·&nbsp; <span style="color:var(--warning)">${pendingExp.length} pendiente${pendingExp.length!==1?'s':''}</span>`:''}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="proj-total">$${showTotal.toFixed(2)}</div>
+        ${statusBadge(mode==='accounting'?'approved':ps)}
+      </div>
+    </div>
+    <div class="proj-card-body">${expLines}</div>
+    <div class="proj-card-foot">
+      <div class="proj-foot-cats">${catSummary(showExp)}</div>
+      ${actions}
+    </div>
+  </div>`;
+}
+
+/* ---- APPROVE / PAY PROJECT ---- */
+function approveProject(projId, newStatus) {
+  const proj = projects.find(p=>p.id===projId);
+  if(!proj) return;
+  proj.expenses.filter(e=>e.status==='pending').forEach(e=>{ e.status = newStatus; });
+  updatePendingBadge();
+  const msgs = { approved: 'Proyecto aprobado — listo para contabilidad', rejected: 'Proyecto rechazado' };
+  showToast(msgs[newStatus]||'Actualizado', newStatus==='approved'?'success':'');
+  renderAprobar();
   if(document.getElementById('view-dashboard').classList.contains('active')) renderDashboard();
 }
 
-function markAllPaid() {
-  expenses.filter(e=>e.status==='approved').forEach(e=>e.status='paid');
+function payProject(projId) {
+  const proj = projects.find(p=>p.id===projId);
+  if(!proj) return;
+  proj.expenses.filter(e=>e.status==='approved').forEach(e=>{ e.status='paid'; });
+  showToast('Proyecto marcado como pagado', 'success');
   renderContabilidad();
-  showToast('Todos los gastos marcados como pagados','success');
+  if(document.getElementById('view-dashboard').classList.contains('active')) renderDashboard();
 }
 
-function updatePendingBadge() {
-  const n = expenses.filter(e=>e.status==='pending').length;
-  const b = document.getElementById('pending-badge');
-  b.textContent = n;
-  b.style.display = n>0?'':'none';
-}
+/* ---- PROJECT DETAIL MODAL ---- */
+function openProjectDetail(projId) {
+  const proj = projects.find(p=>p.id===projId);
+  if(!proj) return;
+  const ps = projectStatus(proj);
+  const total = projectTotal(proj);
+  const pendingExp = proj.expenses.filter(e=>e.status==='pending');
 
-function openDetail(id) {
-  const e = expenses.find(x=>x.id===id);
-  if(!e) return;
-  const c = CAT[e.cat]||CAT.other;
-  const s = STATUS[e.status]||STATUS.pending;
-  const tlDot = (st) => {
-    if(st==='done') return 'tl-done';
-    if(st==='pending') return 'tl-pending';
-    return 'tl-wait';
-  };
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-head">
-      <h3>Detalle del gasto</h3>
+      <h3><i class="ti ti-folder" style="font-size:16px;vertical-align:-2px;margin-right:6px;color:var(--accent)"></i>${proj.name}</h3>
       <button class="btn btn-ghost btn-sm" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-body">
-      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:4px">
-        <div style="width:44px;height:44px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0"><i class="ti ${c.icon}" style="color:var(--accent)"></i></div>
-        <div style="flex:1">
-          <div style="font-size:16px;font-weight:500;line-height:1.3">${e.desc}</div>
-          <div style="font-size:13px;color:var(--text3);margin-top:3px">${e.trip}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:12px;color:var(--text3)">Solicitado por</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            ${avatarHtml(proj.requester, 28)}
+            <span style="font-weight:500">${proj.requester}</span>
+          </div>
         </div>
-        ${statusBadge(e.status)}
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text3)">Total del proyecto</div>
+          <div class="amount-hero" style="margin:4px 0 0">$${total.toFixed(2)}</div>
+        </div>
       </div>
-      <div class="amount-hero">$${e.amount.toFixed(2)} <span style="font-size:14px;color:var(--text3);font-family:'DM Sans',sans-serif">USD</span></div>
-      <div>
-        <div class="detail-row"><span class="dl">Categoría</span>${catTag(e.cat)}</div>
-        <div class="detail-row"><span class="dl">Fecha</span><span style="font-family:'DM Mono',monospace">${e.date}</span></div>
-        <div class="detail-row"><span class="dl">Solicitado por</span><span>${e.requester}</span></div>
-        <div class="detail-row"><span class="dl">Comprobantes</span><span style="display:flex;align-items:center;gap:5px;color:var(--accent)"><i class="ti ti-paperclip" style="font-size:14px"></i>${e.docs} archivo(s) adjunto(s)</span></div>
-      </div>
-      <div style="font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-top:20px;margin-bottom:4px">Flujo de aprobación</div>
+      <div class="detail-row"><span class="dl">Período</span><span style="font-family:'DM Mono',monospace;font-size:12.5px">${proj.dateStart} → ${proj.dateEnd}</span></div>
+      <div class="detail-row" style="${proj.notes?'':'display:none'}"><span class="dl">Notas</span><span style="color:var(--text2)">${proj.notes}</span></div>
+      <div class="detail-row"><span class="dl">Estado</span>${statusBadge(ps)}</div>
+      <div style="font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-top:18px;margin-bottom:8px">Gastos del proyecto</div>
+      ${proj.expenses.map(e=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+          ${catTag(e.cat)}
+          <span style="flex:1;font-size:13px">${e.desc}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500">$${e.amount.toFixed(2)}</span>
+          ${statusBadge(e.status)}
+        </div>`).join('')}
+      <div style="font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-top:18px;margin-bottom:4px">Flujo de aprobación</div>
       <div class="timeline">
         <div class="tl-item">
           <div class="tl-dot tl-done"><i class="ti ti-check"></i></div>
-          <div class="tl-text"><div class="tl-title">Gasto registrado</div><div class="tl-sub">${e.requester} · ${e.date}</div></div>
+          <div class="tl-text"><div class="tl-title">Proyecto registrado</div><div class="tl-sub">${proj.requester} · ${proj.dateStart}</div></div>
         </div>
         <div class="tl-item">
-          <div class="tl-dot ${e.status==='pending'?'tl-pending':e.status==='rejected'?'tl-done':e.status!=='pending'?'tl-done':'tl-wait'}">
-            <i class="ti ${e.status==='pending'?'ti-clock':e.status==='rejected'?'ti-x':'ti-check'}"></i>
+          <div class="tl-dot ${ps==='pending'||ps==='partial'?'tl-pending':ps==='rejected'?'tl-done':ps!=='pending'?'tl-done':'tl-wait'}">
+            <i class="ti ${ps==='pending'||ps==='partial'?'ti-clock':ps==='rejected'?'ti-x':'ti-check'}"></i>
           </div>
           <div class="tl-text">
             <div class="tl-title">Revisión del gerente</div>
-            <div class="tl-sub">${e.status==='pending'?'Pendiente de aprobación':e.status==='rejected'?'Rechazado por gerente':'Aprobado por gerente'}</div>
+            <div class="tl-sub">${ps==='pending'||ps==='partial'?'Pendiente de aprobación':ps==='rejected'?'Rechazado':'Aprobado por gerente'}</div>
           </div>
         </div>
         <div class="tl-item">
-          <div class="tl-dot ${e.status==='paid'?'tl-done':'tl-wait'}"><i class="ti ${e.status==='paid'?'ti-check':'ti-clock'}"></i></div>
-          <div class="tl-text"><div class="tl-title">Pago por contabilidad</div><div class="tl-sub">${e.status==='paid'?'Reembolso procesado':'Pendiente'}</div></div>
+          <div class="tl-dot ${ps==='paid'?'tl-done':'tl-wait'}"><i class="ti ${ps==='paid'?'ti-check':'ti-clock'}"></i></div>
+          <div class="tl-text"><div class="tl-title">Pago por contabilidad</div><div class="tl-sub">${ps==='paid'?'Reembolso procesado':'Pendiente'}</div></div>
         </div>
       </div>
     </div>
-    ${e.status==='pending'?`
+    ${pendingExp.length>0?`
     <div class="modal-foot">
-      <button class="btn btn-danger" onclick="changeStatus(${e.id},'rejected')"><i class="ti ti-x"></i> Rechazar</button>
-      <button class="btn btn-success" onclick="changeStatus(${e.id},'approved')"><i class="ti ti-check"></i> Aprobar</button>
-    </div>`:e.status==='approved'?`
+      <button class="btn btn-danger" onclick="approveProject(${proj.id},'rejected');closeModal()"><i class="ti ti-x"></i> Rechazar</button>
+      <button class="btn btn-success" onclick="approveProject(${proj.id},'approved');closeModal()"><i class="ti ti-check"></i> Aprobar proyecto</button>
+    </div>`:ps==='approved'?`
     <div class="modal-foot">
       <button class="btn" onclick="closeModal()">Cerrar</button>
-      <button class="btn btn-success" onclick="changeStatus(${e.id},'paid')"><i class="ti ti-currency-dollar"></i> Marcar como pagado</button>
+      <button class="btn btn-success" onclick="payProject(${proj.id});closeModal()"><i class="ti ti-currency-dollar"></i> Marcar como pagado</button>
     </div>`:`
     <div class="modal-foot"><button class="btn" onclick="closeModal()">Cerrar</button></div>`}`;
+
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1108,7 +1082,7 @@ function closeModal() {
   document.getElementById('modal').classList.remove('open');
 }
 
-/* EXPENSE LINES */
+/* ---- EXPENSE LINES (new form) ---- */
 function addLine(prefill) {
   const id = ++lineId;
   lines.push(id);
@@ -1129,7 +1103,7 @@ function addLine(prefill) {
         <option value="other">📋 Otro</option>
       </select>
     </td>
-    <td><input type="date" id="dt-${id}" value="${prefill&&prefill.date||'2026-05-20'}" oninput="updateTotal()"></td>
+    <td><input type="date" id="dt-${id}" value="2026-05-20" oninput="updateTotal()"></td>
     <td><input type="number" placeholder="0.00" step="0.01" min="0" id="a-${id}" oninput="updateTotal()"></td>
     <td>
       <input type="file" id="fi-${id}" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="fileChosen(${id})">
@@ -1141,7 +1115,7 @@ function addLine(prefill) {
   document.getElementById('lines-body').appendChild(tr);
   if(prefill) {
     if(prefill.desc) document.getElementById('d-'+id).value = prefill.desc;
-    if(prefill.cat) document.getElementById('c-'+id).value = prefill.cat;
+    if(prefill.cat)  document.getElementById('c-'+id).value = prefill.cat;
     if(prefill.amount) document.getElementById('a-'+id).value = prefill.amount;
   }
   updateTotal();
@@ -1185,7 +1159,7 @@ function updateTotal() {
     const a = parseFloat(document.getElementById('a-'+id)?.value)||0;
     const c = document.getElementById('c-'+id)?.value||'';
     total += a;
-    if(c&&a) catTots[c] = (catTots[c]||0)+a;
+    if(c&&a) catTots[c]=(catTots[c]||0)+a;
   });
   document.getElementById('grand-total').textContent = '$'+total.toFixed(2);
   const chips = document.getElementById('totals-chips');
@@ -1206,8 +1180,8 @@ function clearLines() {
 }
 
 function submitForm() {
-  const trip = document.getElementById('f-trip').value.trim();
-  if(!trip) { showToast('Ingresa el nombre del viaje'); return; }
+  const projName = document.getElementById('f-project').value.trim();
+  if(!projName) { showToast('Ingresa el nombre del proyecto'); return; }
   let ok = true;
   lines.forEach(id=>{
     const desc = document.getElementById('d-'+id)?.value.trim();
@@ -1223,8 +1197,30 @@ function submitForm() {
     return desc&&cat&&amt;
   });
   if(filled.length===0) { showToast('Agrega al menos un gasto'); return; }
-  showToast('✓ Solicitud enviada para aprobación del gerente','success');
-  setTimeout(()=>showView('mis-gastos',document.getElementById('nav-mis-gastos')),1200);
+
+  // Build new project
+  const newProj = {
+    id: ++nextProjectId,
+    name: projName,
+    requester: document.getElementById('f-requester').value.trim()||'María Rivera',
+    dateStart: document.getElementById('f-start').value,
+    dateEnd: document.getElementById('f-end').value,
+    notes: document.getElementById('f-notes').value.trim(),
+    status: 'pending',
+    expenses: filled.map(id=>({
+      id: ++nextExpenseId,
+      desc: document.getElementById('d-'+id).value.trim(),
+      cat: document.getElementById('c-'+id).value,
+      amount: parseFloat(document.getElementById('a-'+id).value)||0,
+      date: document.getElementById('dt-'+id).value,
+      docs: fileStore[id]?1:0,
+      status: 'pending',
+    }))
+  };
+  projects.push(newProj);
+  updatePendingBadge();
+  showToast('✓ Proyecto enviado para aprobación','success');
+  setTimeout(()=>showView('mis-gastos', document.getElementById('nav-mis-gastos')), 1200);
 }
 
 function showToast(msg, type) {
@@ -1232,7 +1228,50 @@ function showToast(msg, type) {
   t.textContent = msg;
   t.className = 'toast show'+(type?' '+type:'');
   clearTimeout(t._timer);
-  t._timer = setTimeout(()=>t.classList.remove('show'),3000);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function updatePendingBadge() {
+  const n = projects.filter(p=>p.expenses.some(e=>e.status==='pending')).length;
+  const b = document.getElementById('pending-badge');
+  b.textContent = n;
+  b.style.display = n>0?'':'none';
+}
+
+/* ---- CONFIGURACIÓN ---- */
+function renderConfiguracion() {
+  const list = document.getElementById('cat-config-list');
+  list.innerHTML = Object.entries(CAT).map(([key, c]) => `
+    <div style="display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:16px;padding:13px 20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="cat-tag ${c.cls}"><i class="ti ${c.icon}"></i>${c.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input
+          type="text"
+          id="cuenta-${key}"
+          value="${c.cuenta||''}"
+          placeholder="Ej: 6310-001"
+          style="flex:1;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Mono',monospace;color:var(--text);background:var(--surface);transition:border-color .15s,box-shadow .15s"
+          onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(37,99,235,.1)'"
+          onblur="this.style.borderColor='var(--border-strong)';this.style.boxShadow='none'"
+        >
+        ${c.cuenta ? `<span style="font-size:11px;color:var(--success);display:flex;align-items:center;gap:3px"><i class="ti ti-check" style="font-size:13px"></i></span>` : `<span style="font-size:11px;color:var(--text3)">sin cuenta</span>`}
+      </div>
+    </div>`).join('');
+}
+
+function saveCategories() {
+  let changed = 0;
+  Object.keys(CAT).forEach(key => {
+    const input = document.getElementById('cuenta-'+key);
+    if(input) {
+      const val = input.value.trim();
+      if(CAT[key].cuenta !== val) { CAT[key].cuenta = val; changed++; }
+    }
+  });
+  showToast(changed > 0 ? '✓ Cuentas contables guardadas' : 'Sin cambios que guardar', changed > 0 ? 'success' : '');
+  renderConfiguracion();
 }
 
 // INIT
