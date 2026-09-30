@@ -18,6 +18,7 @@
   --r:12px; color-scheme:light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;margin:0}
 .wrap{padding-inline:16px;padding-block:16px 32px;max-width:1500px;margin:0 auto}
 h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
@@ -30,7 +31,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .brand img{width:64px;height:auto}
 .brand h1{font-size:30px;font-weight:700;color:var(--accent);letter-spacing:0}
 .brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
-.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px;z-index:5}
+@media (max-width:1149px){.tabs{position:fixed;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 6px 20px rgba(10,46,34,.22);border:1px solid var(--line)}.tabs button{flex:1;padding:11px 8px}.wrap{padding-bottom:96px}.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 .tabs button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-weight:600;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
 .tabs .badge{margin-left:6px}
@@ -340,6 +342,7 @@ function setView(v){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.view===v));
   ['cliente','caja','cocina'].forEach(k => $('#view-'+k).hidden = k!==v);
   if (v==='cocina') { state.newIds.clear(); renderKitchenBadge(); }
+  if (window.innerWidth < 1150) window.scrollTo(0,0);
 }
 
 /* ---------- CLIENTE ---------- */
